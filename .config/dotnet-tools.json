@@ -14,12 +14,6 @@
         "femto"
       ]
     },
-    "fsdocs-tool": {
-      "version": "17.1.0",
-      "commands": [
-        "fsdocs"
-      ]
-    },
     "paket": {
       "version": "7.2.0",
       "commands": [
