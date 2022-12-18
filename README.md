@@ -2,6 +2,9 @@
 
 This is a small Fable app project so you can easily get started and add your own code progressively. For more comprehensive templates [check this page](https://fable.io/docs/2-steps/your-first-fable-project.html).
 
+## Status
+[![Fable CI](https://github.com/Vallantyn/fable-sandbox/actions/workflows/fable.yml/badge.svg)](https://github.com/Vallantyn/fable-sandbox/actions/workflows/fable.yml)
+
 ## Requirements
 
 * [dotnet SDK](https://www.microsoft.com/net/download/core) 5.0 or higher
