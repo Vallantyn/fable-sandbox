@@ -34,4 +34,6 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
         
+    - run: dotnet tool restore
+    
     - run: npm run build
