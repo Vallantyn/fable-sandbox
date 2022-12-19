@@ -23,6 +23,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -34,15 +35,8 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
         
-    - uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-        
     - run: |
-        dotnet tool restore
+        # dotnet tool restore
         npm ci
         npm run build
     
