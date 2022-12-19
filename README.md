@@ -4,6 +4,7 @@ This is a small Fable app project so you can easily get started and add your own
 
 ## Status
 [![Fable CI](https://github.com/Vallantyn/fable-sandbox/actions/workflows/fable.yml/badge.svg)](https://github.com/Vallantyn/fable-sandbox/actions/workflows/fable.yml)
+[![Deployment](https://github.com/Vallantyn/fable-sandbox/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Vallantyn/fable-sandbox/actions/workflows/pages/pages-build-deployment)
 
 ## Requirements
 
