@@ -7,52 +7,65 @@ open Fable.Import
 let canvas = Browser.document.getElementsByTagName_canvas()[0]
 let ctx = canvas.getContext_2d ()
 
-let mutable lastTime = 0.
+type State = {
+    hue:float;
+    time:float;
+    deltaTime:float;
+}
 
-type State =
-    struct
-        val mutable hue: float
-    end
+let hsl h s l = $"hsl({h},{s}%%,{l}%%)"
+let hue h = hsl h 100 50
 
-let mutable state = State()
+let fillRect (color: string) rect =
+    ctx.fillStyle <- !^ color
+    ctx.fillRect rect
+
+let clearRect rect =
+    ctx.clearRect rect
 
 let setupWindow () =
     canvas.width  <- window.innerWidth
     canvas.height <- window.innerHeight
-    
+
 let onWindowResize event =
     setupWindow ()
 
 let start' () =
     window.addEventListener ("resize", onWindowResize)
-
     setupWindow ()
+    {
+        hue=90.;
+        time=0.;
+        deltaTime=0.;
+    }
 
-    state.hue <- 0.
-
-let update' dt =
-    state.hue <- (state.hue + dt * 10.) % 360.
+let update' state:State =
+    { state with hue = (state.hue + state.deltaTime * 10.) % 360. }
 
 let padding = 10.
-    
-let draw' dt =
-    ctx.fillStyle <- !^ $"hsl({state.hue}, 100%%, 50%%)"
-    ctx.fillRect (padding, padding, canvas.width - padding * 2., canvas.height - padding * 2.)
 
-let rec loop time =
-    let dt = (time - lastTime) / 1000.
-    lastTime <- time
-    
-    update' dt
+let draw' state =
+    (
+        padding, padding,
+        canvas.width - padding * 2., canvas.height - padding * 2.
+    ) |> fillRect (hue state.hue)
 
-    ctx.clearRect (0., 0., canvas.width, canvas.height)
+let rec loop time state =
+    let dt = (time - state.time) / 1000.
 
-    draw' dt
+    let state = { state with
+                    time = time;
+                    deltaTime = dt;
+                } |> update'
 
-    window.requestAnimationFrame(loop)
+    (0., 0., canvas.width, canvas.height)
+    |> clearRect
+
+    state
+    |> draw'
+
+    window.requestAnimationFrame (fun time -> state |> loop time)
     |> ignore
 
-start'()
-
-window.requestAnimationFrame(loop)
+window.requestAnimationFrame (fun time -> start'() |> loop time)
 |> ignore
