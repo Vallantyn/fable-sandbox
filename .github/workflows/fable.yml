@@ -23,6 +23,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -35,7 +36,8 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
         
     - run: |
-        dotnet tool restore
+        # dotnet tool restore
+        npm ci
         npm run build
     
     - name: Deploy to GH Page
