@@ -2,6 +2,7 @@
 .fable
 *.fs.js
 bundle.js
+build/**
 temp/**
 
 ## Ignore Visual Studio temporary files, build results, and

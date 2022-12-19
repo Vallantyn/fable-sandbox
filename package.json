@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "postinstall": "dotnet tool restore",
-    "start": "dotnet fable watch src --run webpack-dev-server",
-    "build": "dotnet fable src && webpack"
+    "start": "dotnet fable watch src -o build --run webpack-dev-server",
+    "build": "dotnet fable src -o build && webpack"
   },
   "devDependencies": {
     "webpack": "^5.75.0",
