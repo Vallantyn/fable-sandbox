@@ -1,12 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DefineConstants>NORMALIZED_HSL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tuples.fs" />
-    <Compile Include="Types.fs" />
-    <Compile Include="Canvas.fs" />
+    <Compile Include=".\Helpers\Maths\Maths.Operators.fs" />
+    <Compile Include=".\Helpers\Tuples.fs" />
+    <Compile Include=".\Core\Colors\Colors.fs" />
+    <Compile Include=".\Core\Colors\HSL.fs" />
+    <Compile Include=".\Core\Colors\Conversions.fs" />
+    <Compile Include=".\Core\Types.fs" />
+    <Compile Include=".\Canvas\Canvas.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />

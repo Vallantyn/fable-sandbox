@@ -1,0 +1,13 @@
+<Project>
+    <PropertyGroup>
+        <FsDocsLicenseLink>../LICENSE</FsDocsLicenseLink>
+        <FsDocsReleaseNotesLink>../CHANGELOG</FsDocsReleaseNotesLink>
+        <Version>0.1.0-dev</Version>
+
+        <RepositoryUrl>https://github.com/Vallantyn/fable-sandbox/</RepositoryUrl>
+        <RepositoryBranch>main</RepositoryBranch>
+        <RepositoryType>git</RepositoryType>
+
+        <UsesMarkdownComments>true</UsesMarkdownComments>
+    </PropertyGroup>    
+</Project>
