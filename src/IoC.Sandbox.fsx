@@ -138,7 +138,49 @@ let ListServices_WithDependencies () =
     ))
     |> List.toArray
 
-// TODO: List Services With Dependency Tree
+(*
+** for each service
+** list dependency
+** foreach dependency
+** list dependency
+** ...
+** until dependency without one
+*)
+
+(*
+    Type { Constructors Constructor[] }
+    |- Constructor { Parameters Type[] }
+
+    Type {
+        Constructors {
+            Parameters {
+                Type ...
+            }
+        }
+    }
+    
+    Type T
+    |- Constructors[]
+        |- Constructor T | Parameters T[]
+    
+*)
+
+type TypeConstructor = { Parameters:Type[] }
+type TypeDefinition = { Constructors:TypeConstructor[] }
+
+let GetConstructorParameters (inConstructor:Constructor) =
+    if inConstructor.Parameters |> Array.isEmpty then { Parameters = [||] }
+    else { Parameters=inConstructor.Parameters }
+
+let GetTypeConstructors inType =
+    let ctors =
+        inType
+        |> GetConstructors
+    for ctor in ctors do
+        if ctor.Parameters |> Array.isEmpty then ()
+        else ()
+    // |> Array.map GetConstructorParameters
+
 
 RegisterService<ServiceA>()
 RegisterService<ServiceB>()
@@ -166,4 +208,68 @@ for service in RegisteredServices do
     | Some o -> LogColor $"Built {o}" ConsoleColor.Green
     // let t = ConstructDefault service
     // printfn $"{t}"
+
+BreakLine()
+"Dependencies:" |> LogInfo
+
+(*
+    Type {
+        Constructors[]
+    }
+    
+    Constructor {
+        Type[]
+    }
+*)
+
+let Type_GetConstructors (inType:Type) =
+    match inType.GetConstructors() with
+    | ctors when
+        ctors
+        |> Array.isEmpty
+        |> not
+        -> Some ctors
+    | _ -> None
+
+let Constructor_GetParameters (inCtor:Reflection.ConstructorInfo) =
+    match inCtor.GetParameters() with
+    | parameters 
+        when parameters
+        |> Array.isEmpty
+        |> not
+        -> Some parameters
+    | _ -> None
+    
+let both (inType) =
+    match inType |> Type_GetConstructors with
+    | Some c ->
+        for _c in c do
+            let ps = _c |> Constructor_GetParameters
+            match ps with
+            | Some p -> Some p
+            | None -> None
+    | None -> None
+    
+let rec getTypeDependency (inType:Type) =
+    // let depth = defaultArg depth 0
+    LogInfo $"{inType.Name}"
+    let typeConstructors = 
+        inType
+        |> GetConstructors
+
+    for typeConstructor in typeConstructors do
+        let callback = typeConstructor.Callback;
+        LogInfo $"|- {callback.Name}"
+        let parameters = callback.GetParameters();
+        for parameter in parameters do
+            LogInfo $"  |- {parameter.Name}:{parameter.ParameterType.Name}"
+            parameter.ParameterType 
+            |> getTypeDependency
+
+    BreakLine()
+
+for service in RegisteredServices do
+    service
+    |> getTypeDependency 
+
 "/ END\n" |> LogInfo
