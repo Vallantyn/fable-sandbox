@@ -1,10 +1,30 @@
-﻿open System
+﻿#r "nuget: GoblinFactory.Konsole"
+#r "nuget: GEmojiSharp"
+
+open System
+open System.Reflection
+
+open GEmojiSharp
+
+let mutable indent = 0
+
+let WriteIndent _ = Console.Write("|   ")
 
 let LogColor (msg:string) (color:ConsoleColor) =
     let fg = Console.ForegroundColor
     Console.ForegroundColor <- color
-    Console.WriteLine(msg)
+
+    if indent > 0 then
+        [0..indent-1]
+        |> List.iter WriteIndent
+
+    Console.Write(msg.Emojify())
+    Console.WriteLine()
+
     Console.ForegroundColor <- fg
+
+let BreakLineWithIndent () =
+    LogColor "" ConsoleColor.DarkGray
 
 let LogInfo (msg:string) =
     LogColor msg ConsoleColor.Cyan
@@ -18,8 +38,8 @@ let LogError (msg:string) =
 let Log (msg:string) =
     LogColor msg ConsoleColor.Gray
 
-let BreakLine () =
-    Console.Write '\n'
+let IndentPush () = indent <- indent + 1
+let IndentPop () = indent <- max 0 indent - 1
 
 let mutable RegisteredServices:Type list = []
 
@@ -169,23 +189,6 @@ let ListServices_WithDependencies () =
     
 *)
 
-type TypeConstructor = { Parameters:Type[] }
-type TypeDefinition = { Constructors:TypeConstructor[] }
-
-let GetConstructorParameters (inConstructor:Constructor) =
-    if inConstructor.Parameters |> Array.isEmpty then { Parameters = [||] }
-    else { Parameters=inConstructor.Parameters }
-
-let GetTypeConstructors inType =
-    let ctors =
-        inType
-        |> GetConstructors
-    for ctor in ctors do
-        if ctor.Parameters |> Array.isEmpty then ()
-        else ()
-    // |> Array.map GetConstructorParameters
-
-
 RegisterService<ServiceA>()
 RegisterService<ServiceB>()
 
@@ -197,13 +200,13 @@ RegisterService<ServiceD>()
 for serviceType in ListServices_WithoutDependencies() do
     Log $"- {serviceType}"
 
-BreakLine()
+Console.WriteLine()
 
 "Services With Dependencies:" |> LogInfo
 for serviceType in ListServices_WithDependencies() do
     Log $"- {serviceType}"
 
-BreakLine()
+Console.WriteLine()
 
 for service in RegisteredServices do
     ListConstructors service
@@ -213,7 +216,7 @@ for service in RegisteredServices do
     // let t = ConstructDefault service
     // printfn $"{t}"
 
-BreakLine()
+Console.WriteLine()
 "Dependencies:" |> LogInfo
 
 (*
@@ -296,7 +299,77 @@ let Constructor_GetParameters (inCtor:Reflection.ConstructorInfo) =
         -> Some parameters
     | _ -> None
 
-    
+
+let GetTypeConstructors (t:Type) =
+    // IndentPush()
+    Log $"Getting Constructors for Type: {t.Name}..."
+
+    let result =
+        t.GetConstructors()
+        |> Array.map (
+            fun c ->
+            c.GetParameters()
+            |> Array.map (fun p -> p.ParameterType)
+        )
+    // IndentPop()
+
+    result
+
+open Konsole
+
+let rec ResolveConstructor (c:Type[]) =
+    LogColor $"""Resolving Constructor: ({c |> Array.map (fun t -> t.Name) |> String.concat ", "})...""" ConsoleColor.DarkGray
+
+    IndentPush()
+    let result = c |> Array.forall ResolveType
+    IndentPop()
+
+    result
+
+and ResolveType (t:Type) =
+
+    let ctors = t |> GetTypeConstructors
+
+    let pb = ProgressBar(ctors.Length)
+
+    IndentPush()
+    let result = 
+        ctors
+        |> Array.forall (fun c -> 
+            System.Threading.Thread.Sleep(1000)
+            pb.Refresh(1, $"Resolving Type: {t.Name}...")
+            c |> ResolveConstructor
+        )
+    IndentPop()
+    BreakLineWithIndent()
+    System.Threading.Thread.Sleep(1000)
+    result
+
+// let test:Type = Type.GetType("")
+
+// test
+// |> ResolveType
+
+
+let ResolveConstructor' (c:ConstructorInfo) =
+    false
+
+let GetConstructorsMaps (t:Type) =
+    t.GetConstructors()
+    |> Array.mapi (
+        fun i c ->
+        (i, c.GetParameters()
+        |> Array.map (fun p -> p.ParameterType))
+    )
+    |> Map.ofArray
+
+(*
+
+Type -> {i:Type[]}
+Type -> Type[][]
+
+*)
+
 let rec getTypeDependency (inType:Type) =
     // let depth = defaultArg depth 0
     LogInfo $"{inType.Name}"
@@ -313,9 +386,8 @@ let rec getTypeDependency (inType:Type) =
             parameter.ParameterType 
             |> getTypeDependency
 
-    BreakLine()
+    Console.WriteLine()
 
-for service in RegisteredServices do
 //  foreach Constructors
 //      try and resolve
 //          -> recurse resolve for each dependency
@@ -334,6 +406,17 @@ for service in RegisteredServices do
     |> string
     |> LogInfo
 
-    BreakLine()
+    Console.WriteLine()
+
+"#####\n" |> LogWarning
+
+RegisteredServices
+|> List.iter (
+    fun t ->
+        LogColor "------------------------------------------------------------" ConsoleColor.DarkGray
+        if t |> ResolveType then LogColor $"Resolved :slightly_smiling_face:" ConsoleColor.Green
+        else LogError $"Unresolved :frowning_face:"
+        BreakLineWithIndent ()
+)
 
 "/ END\n" |> LogInfo

@@ -5,3 +5,4 @@ framework net7.0
 nuget FSharp.Core
 nuget Fable.Core 4.0.0-theta-007
 nuget Fable.Browser.Dom
+nuget goblinfactory.konsole
