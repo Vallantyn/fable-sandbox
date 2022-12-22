@@ -104,8 +104,12 @@ type ServiceC (a:ServiceA) =
     let _A = a
     override _.ToString () = $"Service Say: {_A}"
 
-type ServiceD (b:ServiceB) =
+type ServiceD (a:ServiceA, b:ServiceB) =
+    let _A = a
     let _B = b
+    
+    new (a:ServiceA) =
+        ServiceD(a, ServiceB())
     override _.ToString () = $"Service Dit: {_B}"
 
 
@@ -213,14 +217,66 @@ BreakLine()
 "Dependencies:" |> LogInfo
 
 (*
-    Type {
-        Constructors[]
-    }
+    RULES:
     
-    Constructor {
-        Type[]
-    }
+    v1
+    - a type declares its dependencies in its constructor
+    - a type can have an empty constructor
+        -> No dependency
+    - a type can have multiple constructor
+        - in that case each ctor is resolved
+        - if a dependenct cannot be found, the ctor is ommitted
+        - the resolved ctor with the most dependencies is used
+        - if there's an ambiguity -> THROW
+        - if there's an ambiguity AND an INDEPENDANT ctor -> use the empty one
+    
+    v2
+    - Let's try and deal with cyclic dependencies...
 *)
+
+type TConstructor = 
+    | Parameters of TType[]
+    | Empty of Type:Type
+
+    static member CreateFromConstructorInfo (inCtor:Reflection.ConstructorInfo) =
+        match inCtor.GetParameters() with
+        | parameters when not (parameters |> Array.isEmpty)
+            -> parameters
+                |> Array.map (fun p -> p.ParameterType |> TType.CreateFromType)
+                |> Parameters
+        | _ -> Empty inCtor.DeclaringType
+
+    override My.ToString () =
+        match My with
+        | Empty t -> "_"
+        | Parameters parameters ->
+            parameters
+            |> Array.map (fun p -> p.ToString())
+            |> String.concat ", "
+            |> sprintf "(%s)"
+
+and TType =
+    | Constructors of Type:Type * Ls:TConstructor[]
+
+    static member CreateFromType (inType:Type) =
+        let ctors = 
+            inType.GetConstructors()
+            |> Array.map TConstructor.CreateFromConstructorInfo
+        Constructors (inType, ctors)
+
+    override My.ToString () =
+        match My with
+        | Constructors (t, ctors) ->
+            if ctors |> Array.isEmpty then t.Name
+            else
+                let header = $"{t.Name}:\n"
+            // for ctor in ctors do
+            //     header
+                ctors
+                |> Array.fold (fun a b -> a + $"\t{b}\n") header
+            // |> Array.map (fun c -> c.ToString())
+            // |> String.concat "\n"
+            // |> sprintf "%s {\n\t%s\n}" t.Name
 
 let Type_GetConstructors (inType:Type) =
     match inType.GetConstructors() with
@@ -239,16 +295,7 @@ let Constructor_GetParameters (inCtor:Reflection.ConstructorInfo) =
         |> not
         -> Some parameters
     | _ -> None
-    
-let both (inType) =
-    match inType |> Type_GetConstructors with
-    | Some c ->
-        for _c in c do
-            let ps = _c |> Constructor_GetParameters
-            match ps with
-            | Some p -> Some p
-            | None -> None
-    | None -> None
+
     
 let rec getTypeDependency (inType:Type) =
     // let depth = defaultArg depth 0
@@ -269,7 +316,24 @@ let rec getTypeDependency (inType:Type) =
     BreakLine()
 
 for service in RegisteredServices do
+//  foreach Constructors
+//      try and resolve
+//          -> recurse resolve for each dependency
+//          TODO: catch cyclic dependency as unresolvable
+//          OK      add to resolved stack
+//          NOPE    continue
+//  filter resolved ctors
+//      remove same size
+//      keep highest
+//  if there's anything left    OK
+//  else                        THROW
+    
+for service in RegisteredServices do
     service
-    |> getTypeDependency 
+    |> TType.CreateFromType
+    |> string
+    |> LogInfo
+
+    BreakLine()
 
 "/ END\n" |> LogInfo
