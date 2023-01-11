@@ -6,6 +6,8 @@
     <DefineConstants>NORMALIZED_HSL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="WebGL2.fs" />
+    <!-- Core -->
     <Compile Include="Helpers\Maths\Maths.Operators.fs" />
     <Compile Include="Helpers\Tuples.fs" />
     <Compile Include="Core\Colors\Colors.fs" />
@@ -13,8 +15,15 @@
     <Compile Include="Core\Colors\Conversions.fs" />
     <Compile Include="Core\Types.fs" />
     <Compile Include="Canvas\Canvas.fs" />
-    <Compile Include="Core\Renderers\Renderer.fsi" />
     <Compile Include="Core\Renderers\Renderer.fs" />
+    <!-- Systems -->
+    <Compile Include="Core\Systems\Interface\ILoggerSystem.fs" />
+    <Compile Include="Core\Systems\Interface\IRendererSystem.fs" />
+    <Compile Include="Core\Systems\Implementation\LoggerSystem.fs" />
+    <Compile Include="Core\Systems\Implementation\RendererSystem.fs" />
+    <Compile Include="Core\Systems\SystemManager.fs" />
+    <!-- App -->
+    <Compile Include="Terminal\Terminal.fs" />
     <Compile Include="App.fs" />
     <None Include="IoC.Sandbox.fsx" />
   </ItemGroup>

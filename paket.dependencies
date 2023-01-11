@@ -2,6 +2,7 @@ source https://api.nuget.org/v3/index.json
 
 framework net7.0
 
+nuget Fable.Browser.WebGL
 nuget FSharp.Core
 nuget Fable.Core 4.0.0-theta-007
 nuget Fable.Browser.Dom

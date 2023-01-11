@@ -1,105 +1,101 @@
 #r "nuget: Pastel"
+#r "nuget: Lorem.Universal.NET"
 
-open System;
-open type Console;
+module Style = // 0 3 6 9 C F | 00 3F/40 7F/80 BF/C0 FF
+    type Color =
+    | Literal of string
+    | Console of System.ConsoleColor
+
+    type Size =
+    | Auto
+    | Value of int
+
+    open Pastel
+    open System.Runtime.CompilerServices
+
+    [<Extension>]
+    type StringEx =
+        [<Extension>]
+        static member inline Color(str:string, color:Color):string =
+            match color with
+            | Literal l -> str.Pastel(l)
+            | Console c -> str.Pastel(c)
+
+    type Color with 
+        static member White = Literal "FFFFFF"
+        static member LightGray = Literal "CCCCCC"
+        static member Gray = Literal "7F7F7F"
+        static member DarkGray = Literal "333333"
+        static member Black = Literal "000000"
+
+        static member Red = Literal "FF0000"
+        static member DarkRed = Literal "CC0000"
+        static member DarkestRed = Literal "330000"
+
+        static member Yellow = Literal "FFFF00"
+        static member DarkYellow = Literal "CCCC00"
+        static member DarkestYellow = Literal "333300"
+
+        static member Green = Literal "00FF00"
+        static member DarkGreen = Literal "00CC00"
+        static member DarkestGreen = Literal "003300"
+
+        static member Cyan = Literal "00FFFF"
+        static member DarkCyan = Literal "00CCCC"
+        static member DarkestCyan = Literal "003333"
+
+        static member Blue = Literal "0000FF"
+        static member DarkBlue = Literal "0000CC"
+        static member DarkestBlue = Literal "000033"
+
+        static member Magenta = Literal "FF00FF"
+        static member DarkMagenta = Literal "CC00CC"
+        static member DarkestMagenta = Literal "330033"
+
+    type TextStyle = { Color:Color }
+    type Border = 
+    | Simple
+    | Double
+    | Heavy
 
 module ASCIIHelper =
-    
-    type Graphic =
-        static member Light = '░'
-        static member Medium = '▒'
-        static member Dark = '▓'
+    open Style
+    open System.Text.RegularExpressions
 
-    /// Simple Box         <br/>
-    /// <code> ─ │ </code><br/>
-    /// <code> ┌┬┐ </code><br/>
-    /// <code> ├┼┤ </code><br/>
-    /// <code> └┴┘ </code>
-    type Box_Single =
-            static member simple = "─│┌┬┐├┼┤└┴┘"
-            static member Vertical = '│'
-            static member Horizontal = '─'
-            static member TopRight = '┐'
-            static member BottomRight = '┘'
-            static member BottomLeft = '└'
-            static member TopLeft = '┌'
-            static member Bottom = '┴'
-            static member Top = '┬'
-            static member Left = '├'
-            static member Right = '┤'
-            static member Center = '┼'
+    type BorderStyle =
+        | Default of Style.Color
+        | Double of Style.Color
+        | Heavy of Style.Color
 
-    /// Double Box        <br/>
-    /// <code> ═ ║ </code><br/>
-    /// <code> ╔╦╗ </code><br/>
-    /// <code> ╠╬╣ </code><br/>
-    /// <code> ╚╩╝ </code>
-    type Box_Double =
-        static member double = "═║╔╦╗╠╬╣╚╩╝"
-        static member Vertical = '║'
-        static member Horizontal = '═'
-        static member TopRight = '╗'
-        static member BottomRight = '╝'
-        static member BottomLeft = '╚'
-        static member TopLeft = '╔'
-        
-        static member Top = '╦'
-        static member Right = '╣'
-        static member Bottom = '╩'
-        static member Left = '╠'
-        static member Center = '╬'
-        
-    /// Double / Single Box<br/>
-    /// <code> ╓╥╖ </code><br/>
-    /// <code> ╟╫╢ </code><br/>
-    /// <code> ╙╨╜ </code>
-    type Box_DoubleSingle =
-        static member doubleSingle = "─║╓╥╖╟╫╢╙╨╜"
-        static member TopRight = '╖'
-        static member BottomRight = '╜'
-        static member BottomLeft = '╙'
-        static member TopLeft = '╓'
-        static member Top = '╥'
-        static member Right = '╢'
-        static member Bottom = '╨'
-        static member Left = '╟'
-        static member Center = '╫'
-        
-    /// Single / Double Box<br/>
-    /// <code> ╒╤╕ </code><br/>
-    /// <code> ╞╪╡ </code><br/>
-    /// <code> ╘╧╛ </code>
-    type Box_SingleDouble =
-        static member singelDouble = "═│╒╤╕╞╪╡╘╧╛"
-        static member TopRight = '╕'
-        
-        static member BottomRight = '╛'
-        static member BottomLeft = '╘'
-        static member TopLeft = '╒'
-        static member Top = '╤'
-        static member Right = '╡'
-        static member Bottom = '╧'
-        static member Left = '╞'
-        static member Center = '╪'
+    type BorderStyle with
+        static member DefaultStyle = Default Style.Color.White
+        static member DefaultDouble = Double Style.Color.White
+        static member DefaultHeavy = Heavy Style.Color.White
+
+    type BoxStyle = {
+        Text:Style.TextStyle;
+        Top:BorderStyle;
+        Bottom:BorderStyle;
+        Left:BorderStyle;
+        Right:BorderStyle;
+    }
     
-    /// Heavy Box         <br/>
-    /// <code> ━ ┃ </code><br/>
-    /// <code> ┏┳┓ </code><br/>
-    /// <code> ┣╋┫ </code><br/>
-    /// <code> ┗┻┛ </code>
-    type Box_Heavy =
-        static member Horizontal = '━'
-        static member Vertical = '┃'
-        static member TopLeft = '┏'
-        static member TopRight = '┓'
-        static member BottomLeft = '┗'
-        static member BottomRight = '┛'
-        static member Left = '┣'
-        static member Right = '┫'
-        static member Top = '┳'
-        static member Bottom = '┻'
-        static member Center = '╋'
-        
+    type BoxStyle with
+        member My.Borders style =
+            { My with Top=style; Bottom=style; Left=style; Right=style}
+        member My.Horizontal style =
+            { My with Top=style; Bottom=style; }
+        member My.Vertical style =
+            { My with Left=style; Right=style}
+    
+    let DefaultStyle = {
+        Text = { Color = Style.Color.White }
+        Top = BorderStyle.DefaultStyle
+        Bottom = BorderStyle.DefaultStyle
+        Left = BorderStyle.DefaultStyle
+        Right = BorderStyle.DefaultStyle
+    }
+
     type BoxTileSets =
         static member simple                = "─│┌┬┐├┼┤└┴┘"
         static member double                = "═║╔╦╗╠╬╣╚╩╝"
@@ -125,6 +121,129 @@ module ASCIIHelper =
 simple/double: H or V
 simple/heavy: U/D/L/R/H/V
 *)
+    
+(* Window Styles
+┌────────────┐ ╔════════════════╗ ╓───────────────┐
+│   Simple   │ ║     Double     ║ ║ Bottom + Left │
+└────────────┘ ╚════════════════╝ ╚═══════════════╛
+╒════════════╕ ┌────────────────┐ ╒═══════════════╕
+│    Top     │ │     Bottom     │ │ Top + Bottom  │
+└────────────┘ ╘════════════════╛ ╘═══════════════╛
+╓────────────┐ ┌────────────────╖ ╓───────────────╖
+║    Left    │ │     Right      ║ ║ Left + Right  ║
+╙────────────┘ └────────────────╜ ╙───────────────╜
+╔════════════╕ ┌────────────────╖ ╒═══════════════╗
+║ Top + Left │ │ Bottom + Right ║ │  Top + Right  ║
+╙────────────┘ ╘════════════════╝ └───────────────╜
+
+               ┏━━━━━━━━━━━━━━━━┓ ┎───────────────┐
+               ┃     Heavy      ┃ ┃ Bottom + Left │
+               ┗━━━━━━━━━━━━━━━━┛ ┗━━━━━━━━━━━━━━━┙
+┍━━━━━━━━━━━━┑ ┌────────────────┐ ┍━━━━━━━━━━━━━━━┑
+│    Top     │ │     Bottom     │ │ Top + Bottom  │
+└────────────┘ ┕━━━━━━━━━━━━━━━━┙ ┕━━━━━━━━━━━━━━━┙
+┎────────────┐ ┌────────────────┒ ┎───────────────┒
+┃    Left    │ │     Right      ┃ ┃ Left + Right  ┃
+┖────────────┘ └────────────────┚ ┖───────────────┚
+┏━━━━━━━━━━━━┑ ┌────────────────┒ ┍━━━━━━━━━━━━━━━┓
+┃ Top + Left │ │ Bottom + Right ┃ │  Top + Right  ┃
+┖────────────┘ ┕━━━━━━━━━━━━━━━━┛ └───────────────┚
+*)
+    type Box (text, style:BoxStyle) =
+        let style = style
+        let text = text
+
+        let height = 1;
+        let paddingLeft = 1;
+        let paddingRight = 1;
+
+        member private My.RawValue =
+            let rx = Regex(@"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]", RegexOptions.Compiled)
+            rx.Replace (text, "")
+        
+        member private My.Width = My.RawValue |> String.length
+        member private _.PaddingHorizontal = paddingLeft + paddingRight
+        member private _.PaddingLeft = " " |> String.replicate paddingLeft
+        member private _.PaddingRight = " " |> String.replicate paddingRight
+        
+        member private My.HorizontalStyle style =
+            let s =
+                match style with
+                | Double s -> ("═", s)
+                | Heavy s -> ("━", s)
+                | Default s -> ("─", s)
+
+            let ss = 
+                fst s
+                |> String.replicate (My.Width + My.PaddingHorizontal)
+
+            ss.Color(snd s)
+
+        member private My.VerticalStyle style =
+            match style with
+            | Double s -> "║".Color(s)
+            | Heavy s -> "┃".Color(s)
+            | Default s -> "│".Color(s)
+        
+        member private _.Content = $"{text}".Color(style.Text.Color)
+        
+        member private My.Top      = My.HorizontalStyle style.Top
+        
+        member private _.TopRight  = 
+            match (style.Top, style.Right) with
+            | Default _, Double _ -> "╖"
+            | Double _, Default _ -> "╕"
+            | _, Double _ -> "╗"
+            | Default _, Heavy _ -> "┒"
+            | Heavy _, Default _ -> "┑"
+            | _, Heavy _ -> "┓"
+            | _, _ -> "┐"
+            // | _, _ -> "╮"
+        
+        member private My.Right     = My.VerticalStyle style.Right
+            
+        member private _.DownRight = 
+            match (style.Bottom, style.Right) with
+            | Default _, Double _ -> "╜"
+            | Double _, Default _ -> "╛"
+            | _, Double _ -> "╝"
+            | Default _, Heavy _ -> "┚"
+            | Heavy _, Default _ -> "┙"
+            | _, Heavy _ -> "┛"
+            | _, _ -> "┘"
+            // | _, _ -> "╮"
+        
+        member private My.Down     = My.HorizontalStyle style.Bottom
+        
+        member private _.DownLeft  = 
+            match (style.Bottom, style.Left) with
+            | Default _, Double _ -> "╙"
+            | Double _, Default _ -> "╘"
+            | _, Double _ -> "╚"
+            | Default _, Heavy _ -> "┖"
+            | Heavy _, Default _ -> "┕"
+            | _, Heavy _ -> "┗"
+            | _, _ -> "└"
+            // | _, _ -> "╮"
+        
+        member private My.Left      = My.VerticalStyle style.Left
+        
+        member private _.TopLeft   = 
+            match (style.Top, style.Left) with
+            | Default _, Double _ -> "╓"
+            | Double _, Default _ -> "╒"
+            | _, Double _ -> "╔"
+            | Default _, Heavy _ -> "┎"
+            | Heavy _, Default _ -> "┍"
+            | _, Heavy _ -> "┏"
+            | _, _ -> "┌"
+            // | _, _ -> "╮"
+
+        member private My.Header = $"{My.TopLeft}{My.Top}{My.TopRight}\n"
+        member private My.Body   = $"{My.Left}{My.PaddingLeft}{My.Content}{My.PaddingRight}{My.Right}\n" |> String.replicate height
+        member private My.Footer = $"{My.DownLeft}{My.Down}{My.DownRight}"
+        
+        override My.ToString() = $"{My.Header}{My.Body}{My.Footer}"
 
 (*
 ┌─┬─┐╒═╤═╕╓─╥─╖╔═╦═╗ ┌─┐╒═╕╓─╖╔═╗
@@ -139,45 +258,24 @@ simple/heavy: U/D/L/R/H/V
 ┌─┲━┓┏━┳━┓┏━┱─┐┏━┳━┓ ┗╾┘└─┘└╼┛└╼┛
 ├─╄━┩┡━╇━┩┡━╃─┤┞─╀─┦ ┏╾┐┌─┐┌╼┓┎─┒
 └─┴─┘└─┴─┘└─┴─┘└─┴─┘ ┗╾┘└─┘└╼┛┖─┚
-┌─┮━┓┎─┰─┒┏━┭─┐  ╭─╮ ┏╾┐┌─┐┌╼┓┏╾┐
-├─┾━┫┠─╂─┨┣━┽─┤  ╰─╯ ┗━┛┗━┛┗━┛┗╾┘
-└─┶━┛┖─┸─┚┗━┵─┘ 
+┌─┮━┓┎─┰─┒┏━┭─┐─│╭─╮ ┏╾┐┌─┐┌╼┓┏╾┐
+├─┾━┫┠─╂─┨┣━┽─┤═║╰─╯ ┗━┛┗━┛┗━┛┗╾┘
+└─┶━┛┖─┸─┚┗━┵─┘━┃╾╼╿╽
 *)
         
-(*
- ╌ ╎
- ╍ ╏
- ┄ ┆
- ┅ ┇
- ┈ ┊
- ┉ ┋
- ╾               ┭ ┵ ┽ // L
- 
- ╼               ┮ ┶ ┾ // R
- 
-     ┍ ┑ ┕ ┙ ┝ ┥ ┯ ┷ ┿ // H
- 
-   ╿         ┞ ┦     ╀ // U
- 
-   ╽         ┟ ┧     ╁ // D
- 
-     ┎ ┒ ┖ ┚ ┠ ┨ ┰ ┸ ╂ // V
- 
-               ┩   ┹ ╃ // U+L
-             ┡     ┺ ╄ // U+R
-               ┪ ┱   ╅ // D+L
-             ┢   ┲   ╆ // D+R
-                     ╇ // H+U
-                     ╈ // H+D
-                     ╉ // V+L
-                     ╊ // V+R
- ╴ ╵ ╶ ╷
- ╸ ╹ ╺ ╻
- ╭─╮
- ╰─╯
- ╱ ╲
- ╳
-
+(*       ▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚
+ ╌ ┄ ┈   ┌─────┐╭─────╮┌╌╌╌╌╌┐┌┄┄┄┄┄┐┌┈┈┈┈┈┐┌╴───╶┐ ▁▁▁▁▁
+ ╍ ┅ ┉   │ Box ││ Box │╎ Box ╎┆ Box ┆┊ Box ┊╵ Box ╷ ▏▓▒░▕
+ ╎ ┆ ┊   └─────┘╰─────╯└╌╌╌╌╌┘└┄┄┄┄┄┘└┈┈┈┈┈┘└╴───╶┘ ▔▔▔▔▔
+ ╏ ┇ ┋   ┏━━━━━┓┏━━━━━┓┏╍╍╍╍╍┓┏┅┅┅┅┅┓┏┉┉┉┉┉┓┏╸━━━╺┓ ▄▄▄▄▄
+ ╴ ╵ ╶ ╷ ┃ Box ┃┃ Box ┃╏ Box ╏┇ Box ┇┋ Box ┋╹ Box ╻ ▌▓▒░▐
+ ╸ ╹ ╺ ╻ ┗━━━━━┛┗━━━━━┛┗╍╍╍╍╍┛┗┅┅┅┅┅┛┗┉┉┉┉┉┛┗╸━━━╺┛ ▀▀▀▀▀
+ ╭─╮     ▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞
+ ╰─╯     ▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞
+ ╳ ╱ ╲   
+ ▗▄▄▄▖
+ ▐ A ▌
+ ▝▀▀▀▘
 *)
 
     type Block =
@@ -498,9 +596,10 @@ module HSL =
     
 // module App =
 open System
+open type Console
 open ASCIIHelper
-open Pastel
-open System.Drawing
+open Style
+// open System.Drawing
 
 let k = 8
 let light = String(BlockElements.ShadeLight, k)
@@ -522,29 +621,70 @@ let fullSquare = String(BlockElements.Full, 2)
 //         ResetColor()
 //         WriteLine()
 
-CursorVisible <- false
+let hexcolor = LoremNET.Lorem.HexNumber(6)
 
-let mutable n = 0
+let colors = [|
+    (Color.DarkGray, Color.LightGray)
+    (Color.DarkestRed, Color.DarkRed)
+    (Color.DarkestGreen, Color.DarkGreen)
+    (Color.DarkestBlue, Color.DarkBlue)
+    (Color.DarkestCyan, Color.DarkCyan)
+    (Color.DarkestMagenta, Color.DarkMagenta)
+    (Color.DarkestYellow, Color.DarkYellow)
+|]
 
-let rand = Random()
+let genText (min:int) (max:int) (text:Style.Color) (accent:Style.Color) = 
+    let str = LoremNET.Lorem.Sentence(min, max).Split ' '
+    let accentIndex = LoremNET.Lorem.Integer(0, str |> Array.length)
+    let nstr =
+        str 
+        |> Array.mapi (fun i s -> if i = accentIndex then s.Color(accent) else s)
+        |> String.concat " "
+    nstr.Color(text)
 
-let ss = seq {
-    for h in [0..399] do
-        rand.Next() % 360
-}
-let s = ss |> Seq.toArray
+let genText' min max =
+    let baseColor = Literal (LoremNET.Lorem.HexNumber 6)
+    let accentColor = Literal (LoremNET.Lorem.HexNumber 6)
+    // let theme = (baseColor, accentColor)
+    genText min max baseColor accentColor
+    
+let style = { DefaultStyle with Text = { Color = Color.DarkGray }}
 
-while true do
-    // SetCursorPosition(0,0)
-    Clear()
-    for h in s do
-        let (r, g, b) = HSL.HSL.toRgb (h-n)
-        let c = $"{r:X2}{g:X2}{b:X2}"
-        Write("⣿⣿".Pastel(c))
+let s = genText 2 5 Color.DarkCyan Color.Cyan
 
-    n <- (n+1)%360
+WriteLine(Box(genText' 3 5, style))
+WriteLine(Box(genText' 3 5, style.Borders(BorderStyle.DefaultDouble)))
+WriteLine(Box(genText' 3 5, style.Borders(BorderStyle.DefaultHeavy)))
+WriteLine(Box(genText' 3 5, style.Horizontal(BorderStyle.DefaultDouble)))
+WriteLine(Box(genText' 3 5, style.Vertical(BorderStyle.DefaultDouble)))
+WriteLine(Box(genText' 3 5, style.Horizontal(BorderStyle.DefaultHeavy)))
+WriteLine(Box(genText' 3 5, style.Vertical(BorderStyle.DefaultHeavy)))
+WriteLine(Box(genText' 3 5, style.Horizontal(BorderStyle.DefaultDouble).Vertical(BorderStyle.DefaultHeavy)))
+WriteLine(Box(genText' 3 5, style.Vertical(BorderStyle.DefaultDouble).Horizontal(BorderStyle.DefaultHeavy)))
 
-    Threading.Thread.Sleep(1000/60)
+// CursorVisible <- false
+
+// let mutable n = 0
+
+// let rand = Random()
+
+// let ss = seq {
+//     for h in [0..399] do
+//         rand.Next() % 360
+// }
+// let s = ss |> Seq.toArray
+
+// while true do
+//     // SetCursorPosition(0,0)
+//     Clear()
+//     for h in s do
+//         let (r, g, b) = HSL.HSL.toRgb (h-n)
+//         let c = $"{r:X2}{g:X2}{b:X2}"
+//         Write("⣿⣿".Pastel(c))
+
+//     n <- (n+1)%360
+
+//     Threading.Thread.Sleep(1000/60)
 
 // let gba = [
 //         "081820";

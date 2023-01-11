@@ -85,10 +85,8 @@ type DrawContext (?inStyle) =
             stroke = Literal <| string context.strokeStyle;
     }
 
-    let tempStyle = defaultArg inStyle previousStyle
-
     do (
-        SetStyle tempStyle
+        SetStyle (defaultArg inStyle previousStyle)
         Begin ()
     )
 
@@ -96,6 +94,9 @@ type DrawContext (?inStyle) =
         member _.Dispose () =
             End ()
             SetStyle previousStyle
+            
+    member _.SetStyle inStyle =
+        SetStyle inStyle
 
 let Clear rect =
     rect

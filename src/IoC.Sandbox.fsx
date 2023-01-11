@@ -1,118 +1,72 @@
 ﻿#r "nuget: GoblinFactory.Konsole"
+#r "nuget: Pastel"
 #r "nuget: GEmojiSharp"
 
-open System
-open System.Reflection
+(* ─│┌┬┐├┼┤└┴┘ *)
+module Log =
+    open System
+    open type Console
+    open Pastel
+    open GEmojiSharp
 
-open GEmojiSharp
 
-let mutable indent = 0
+    let mutable indent = 0
+    let WriteIndent _ = Write("│   ")
 
-let WriteIndent _ = Console.Write("|   ")
+    let Separator () =
+        WriteLine (
+            String('─', WindowWidth)
+                .Pastel(ConsoleColor.DarkGray)
+        )
 
-let LogColor (msg:string) (color:ConsoleColor) =
-    let fg = Console.ForegroundColor
-    Console.ForegroundColor <- color
+    let LogColor (msg:string) =
+        if indent > 0 then
+            [0..indent-1]
+            |> List.iter WriteIndent
 
-    if indent > 0 then
-        [0..indent-1]
-        |> List.iter WriteIndent
+        WriteLine(msg.Emojify())
 
-    Console.Write(msg.Emojify())
-    Console.WriteLine()
+    let BreakLineWithIndent () =
+        LogColor ("".Pastel "FFFFFF")
 
-    Console.ForegroundColor <- fg
+    let Info (msg:string) :unit =
+        LogColor ($"{msg}".Pastel "009999")
 
-let BreakLineWithIndent () =
-    LogColor "" ConsoleColor.DarkGray
+    let Warn (msg:string) =
+        LogColor ($"{msg}".Pastel "999900")
 
-let LogInfo (msg:string) =
-    LogColor msg ConsoleColor.Cyan
+    let Error (msg:string) =
+        LogColor ($"{msg}".Pastel "990000")
 
-let LogWarning (msg:string) =
-    LogColor msg ConsoleColor.Yellow
+    let Msg (msg:string) =
+        LogColor (msg.Pastel "CCCCCC")
 
-let LogError (msg:string) =
-    LogColor msg ConsoleColor.Red
+    let IndentPush () = indent <- indent + 1
+    let IndentPop () = indent <- max 0 indent - 1
 
-let Log (msg:string) =
-    LogColor msg ConsoleColor.Gray
+module Services =
+    open System 
+    
+    let mutable RegisteredServices:Type list = []
+    let RegisterService<'Service> () =
+        let typeOfService = typeof<'Service>
 
-let IndentPush () = indent <- indent + 1
-let IndentPop () = indent <- max 0 indent - 1
+        if not (RegisteredServices |> List.contains typeOfService)
+        then RegisteredServices <- typeOfService :: RegisteredServices
 
-let mutable RegisteredServices:Type list = []
-
-let RegisterService<'Service> () =
-    let typeOfService = typeof<'Service>
-
-    if not (RegisteredServices |> List.contains typeOfService)
-    then RegisteredServices <- typeOfService :: RegisteredServices
-
-// type Constructor = { Callback:Reflection.ConstructorInfo }
-type Constructor = { Callback:Reflection.ConstructorInfo; Parameters:Type[]; }
-type Constructor with
-    member My.ConstructDefault () = My.Callback.Invoke[||]
-    member My.Construct (parameters:obj[] option) =
-        match parameters with
-        | None -> My.ConstructDefault()
-        | Some p -> My.Callback.Invoke p
-
-let GetParameterTypes (parameters:Reflection.ParameterInfo[]) =
-    parameters
-    |> Array.map (fun p -> p.ParameterType)
-
-let GetConstructor (parameters:Type[] option) (t:Type) =
-    let parameterList =
-        match parameters with
-        | None -> [||]
-        | Some p -> p
-
-    match t.GetConstructor(parameterList) with
-    | null -> None
-    | ctor -> Some { Callback = ctor; Parameters = parameterList }
-
-let GetConstructors (t:Type) =
-    t.GetConstructors()
-    |> Array.map (fun ctor -> { Callback = ctor; Parameters = ctor.GetParameters() |> GetParameterTypes })
-
-let TryConstructDefault (t:Type) =
-    match (t |> GetConstructor None) with
-    | None -> None
-    | Some tCtor -> Some(tCtor.ConstructDefault())
-
-let GetTypes (objects:obj[] option) =
-    match objects with
-    | None -> [||]
-    | Some object ->
-        object
-        |> Array.map (fun o -> o.GetType())
-
-let TryConstructWith (t:Type) (parameters:obj[] option) =
-    match t |> GetConstructor (parameters |> GetTypes |> Some) with
-    | None -> None
-    | Some ctor -> ctor.Construct(parameters) |> Some
-
-    // match parameters with
-    // | None -> TryConstructDefault t
-    // | Some parameterList ->
-    //     match t.GetConstructor (parameterList |> GetTypes) with
-    //     | null -> None
-    //     | tCtor -> Some(tCtor.Invoke parameterList)
-
-let ConstructDefault (t:Type) =
-    t.GetConstructor([||])
-     .Invoke([||])
-
-let ConstructDefault'<'T> =
-    ConstructDefault typeof<'T>
-    // typeof<'T>.GetConstructor([||])
-    //           .Invoke([||])
-    :?> 'T
+    type IService =
+        abstract member GetName: string
+        abstract member GetDependencies: string[]
+        abstract member Construct: IService[] -> IService
+        
+    
 
 (***********************************************************************************************************************
 ** Execution                                                                                                          **
 ***********************************************************************************************************************)
+
+open System
+open Pastel
 
 type ServiceA () =
     override _.ToString () = "Service AH!"
@@ -121,302 +75,108 @@ type ServiceB () =
     override _.ToString () = "Service Bae :3"
 
 type ServiceC (a:ServiceA) =
-    let _A = a
-    override _.ToString () = $"Service Say: {_A}"
+    member _.A = a
+    override My.ToString () = $"Service Say: {My.A}"
 
-type ServiceD (a:ServiceA, b:ServiceB) =
-    let _A = a
+type ServiceD (c:ServiceC, b:ServiceB) =
+    let _C = c
     let _B = b
     
-    new (a:ServiceA) =
-        ServiceD(a, ServiceB())
-    override _.ToString () = $"Service Dit: {_B}"
+    new (a:ServiceA, b:ServiceB) =
+        ServiceD(ServiceC(a), b)
+    override _.ToString () = $"Service Dit: {_C} & {_B}"
 
+Services.RegisterService<ServiceA>()
+Services.RegisterService<ServiceB>()
 
-let ListConstructors (t:Type) =
-    Log $"{t}"
-    for constructor in t.GetConstructors () do
-    Log $"|-- {constructor}"
-    for parameter in constructor.GetParameters () do
-        Log $"|   |-- {parameter}"
+Services.RegisterService<ServiceC>()
+Services.RegisterService<ServiceD>()
 
-let ListServices_WithoutDependencies () =
-    RegisteredServices
-    |> List.filter (fun serviceType -> (
-        (serviceType
-         |> GetConstructor None
-         ).IsSome
-    ))
-    |> List.toArray
+"BEGIN" |> Log.Info
 
-let ListServices_WithDependencies () =
-    RegisteredServices
-    |> List.filter (fun serviceType -> (
-        serviceType
-        |> GetConstructors
-        |> Array.exists (fun ctor -> (
-            ctor.Parameters
-            |> Array.isEmpty
-            |> not
-        ))
-    ))
-    |> List.toArray
+let sep = String('#', Console.WindowWidth) + "\n"
 
-(*
-** for each service
-** list dependency
-** foreach dependency
-** list dependency
-** ...
-** until dependency without one
-*)
+let inline good (str:string) = str.Pastel("00CC00")
+let inline bad (str:string) = str.Pastel("CC0000")
+let inline noun (typ:Type) = $"""<{typ.Name.Pastel("CC00CC")}>"""
+let inline nount<'T> () = noun (typeof<'T>)
 
-(*
-    Type { Constructors Constructor[] }
-    |- Constructor { Parameters Type[] }
+let mutable ServiceInstances = List.empty<obj>
 
-    Type {
-        Constructors {
-            Parameters {
-                Type ...
-            }
-        }
-    }
-    
-    Type T
-    |- Constructors[]
-        |- Constructor T | Parameters T[]
-    
-*)
+type Constructor = Reflection.ConstructorInfo
+type Constructors = Constructor[]
+type MaybeConstructor = Constructor option
 
-RegisterService<ServiceA>()
-RegisterService<ServiceB>()
-
-RegisterService<ServiceC>()
-RegisterService<ServiceD>()
-
-"BEGIN" |> LogInfo
-"Services Without Dependencies:" |> LogInfo
-for serviceType in ListServices_WithoutDependencies() do
-    Log $"- {serviceType}"
-
-Console.WriteLine()
-
-"Services With Dependencies:" |> LogInfo
-for serviceType in ListServices_WithDependencies() do
-    Log $"- {serviceType}"
-
-Console.WriteLine()
-
-for service in RegisteredServices do
-    ListConstructors service
-    match service |> TryConstructDefault with
-    | None -> LogWarning $"Could not construct default for {service.Name}"
-    | Some o -> LogColor $"Built {o}" ConsoleColor.Green
-    // let t = ConstructDefault service
-    // printfn $"{t}"
-
-Console.WriteLine()
-"Dependencies:" |> LogInfo
-
-(*
-    RULES:
-    
-    v1
-    - a type declares its dependencies in its constructor
-    - a type can have an empty constructor
-        -> No dependency
-    - a type can have multiple constructor
-        - in that case each ctor is resolved
-        - if a dependenct cannot be found, the ctor is ommitted
-        - the resolved ctor with the most dependencies is used
-        - if there's an ambiguity -> THROW
-        - if there's an ambiguity AND an INDEPENDANT ctor -> use the empty one
-    
-    v2
-    - Let's try and deal with cyclic dependencies...
-*)
-
-type TConstructor = 
-    | Parameters of TType[]
-    | Empty of Type:Type
-
-    static member CreateFromConstructorInfo (inCtor:Reflection.ConstructorInfo) =
-        match inCtor.GetParameters() with
-        | parameters when not (parameters |> Array.isEmpty)
-            -> parameters
-                |> Array.map (fun p -> p.ParameterType |> TType.CreateFromType)
-                |> Parameters
-        | _ -> Empty inCtor.DeclaringType
-
-    override My.ToString () =
-        match My with
-        | Empty t -> "_"
-        | Parameters parameters ->
-            parameters
-            |> Array.map (fun p -> p.ToString())
-            |> String.concat ", "
-            |> sprintf "(%s)"
-
-and TType =
-    | Constructors of Type:Type * Ls:TConstructor[]
-
-    static member CreateFromType (inType:Type) =
-        let ctors = 
-            inType.GetConstructors()
-            |> Array.map TConstructor.CreateFromConstructorInfo
-        Constructors (inType, ctors)
-
-    override My.ToString () =
-        match My with
-        | Constructors (t, ctors) ->
-            if ctors |> Array.isEmpty then t.Name
-            else
-                let header = $"{t.Name}:\n"
-            // for ctor in ctors do
-            //     header
-                ctors
-                |> Array.fold (fun a b -> a + $"\t{b}\n") header
-            // |> Array.map (fun c -> c.ToString())
-            // |> String.concat "\n"
-            // |> sprintf "%s {\n\t%s\n}" t.Name
-
-let Type_GetConstructors (inType:Type) =
-    match inType.GetConstructors() with
-    | ctors when
-        ctors
-        |> Array.isEmpty
-        |> not
-        -> Some ctors
-    | _ -> None
-
-let Constructor_GetParameters (inCtor:Reflection.ConstructorInfo) =
-    match inCtor.GetParameters() with
-    | parameters 
-        when parameters
-        |> Array.isEmpty
-        |> not
-        -> Some parameters
-    | _ -> None
-
-
-let GetTypeConstructors (t:Type) =
-    // IndentPush()
-    Log $"Getting Constructors for Type: {t.Name}..."
-
-    let result =
-        t.GetConstructors()
-        |> Array.map (
-            fun c ->
-            c.GetParameters()
-            |> Array.map (fun p -> p.ParameterType)
-        )
-    // IndentPop()
-
-    result
-
-open Konsole
-
-let rec ResolveConstructor (c:Type[]) =
-    LogColor $"""Resolving Constructor: ({c |> Array.map (fun t -> t.Name) |> String.concat ", "})...""" ConsoleColor.DarkGray
-
-    IndentPush()
-    let result = c |> Array.forall ResolveType
-    IndentPop()
-
-    result
-
-and ResolveType (t:Type) =
-
-    let ctors = t |> GetTypeConstructors
-
-    let pb = ProgressBar(ctors.Length)
-
-    IndentPush()
-    let result = 
-        ctors
-        |> Array.forall (fun c -> 
-            System.Threading.Thread.Sleep(1000)
-            pb.Refresh(1, $"Resolving Type: {t.Name}...")
-            c |> ResolveConstructor
-        )
-    IndentPop()
-    BreakLineWithIndent()
-    System.Threading.Thread.Sleep(1000)
-    result
-
-// let test:Type = Type.GetType("")
-
-// test
-// |> ResolveType
-
-
-let ResolveConstructor' (c:ConstructorInfo) =
-    false
-
-let GetConstructorsMaps (t:Type) =
-    t.GetConstructors()
-    |> Array.mapi (
-        fun i c ->
-        (i, c.GetParameters()
-        |> Array.map (fun p -> p.ParameterType))
+let TryResolveConstructors<'T> (constructors:Constructors):MaybeConstructor =
+    constructors
+    |> Array.toSeq
+    |> Seq.sortWith (fun c1 c2 ->
+        compare (c2.GetParameters().Length) (c1.GetParameters().Length)
     )
-    |> Map.ofArray
+    |> Seq.toArray
+    |> Array.tryFind (fun c ->
+        c.GetParameters()
+        |> Array.forall (
+            fun p ->
+                Services.RegisteredServices
+                |> List.contains p.ParameterType
+        )
+    )
 
-(*
+let rec TryGetService (serviceType:Type) =
+    Log.Msg $"""Trying to {good "get"} Service {noun serviceType}..."""
+    match ServiceInstances |> List.tryFind (fun t -> t.GetType() = serviceType ) with
+    | Some t -> Some(t)
+    | None -> 
+        Log.Warn $"""Couldn't {bad "find"} Service {noun serviceType}, trying to {good "create"} it.."""
+        TryCreateService serviceType
 
-Type -> {i:Type[]}
-Type -> Type[][]
+and TryCreateService (serviceType) =
+    Log.Msg $"""Trying to {good "create"} Service {noun serviceType}..."""
+    let ctors = serviceType.GetConstructors()
+    let ctor =
+        if ctors |> Array.isEmpty then None
+        elif ctors.Length > 1 then
+            Log.Warn $"""{noun serviceType} {good "has"} {ctors.Length} constructors, trying to resolve..."""
+            TryResolveConstructors ctors
+        else Some ctors[0]
 
-*)
+    match ctor with
+    | Some c -> TryConstruct c
+    | None ->
+        Log.Error $"""{noun serviceType} {bad "doesn't have"} any usable constructor, {bad "aborting"}..."""
+        None
 
-let rec getTypeDependency (inType:Type) =
-    // let depth = defaultArg depth 0
-    LogInfo $"{inType.Name}"
-    let typeConstructors = 
-        inType
-        |> GetConstructors
+and TryConstruct (constructor:Constructor) =
+    Log.Msg $"""Trying to {good "construst"} Service {noun constructor.DeclaringType}..."""
+    let parameters = constructor.GetParameters()
+    if parameters |> Array.isEmpty then
+        let instance = constructor.Invoke [||]
+        ServiceInstances <- instance::ServiceInstances
+        Some instance
+    else
+        let resolvedParameters = 
+            parameters
+            |> Array.choose (fun p -> TryGetService(p.ParameterType))
+        if resolvedParameters.Length <> parameters.Length then
+            Log.Error $"""{bad "Couldn't resolve"} parameters for constructor, {bad "aborting"}..."""
+            None
+        else
+            let instance = constructor.Invoke resolvedParameters
+            ServiceInstances <- instance::ServiceInstances
+            Some instance
 
-    for typeConstructor in typeConstructors do
-        let callback = typeConstructor.Callback;
-        LogInfo $"|- {callback.Name}"
-        let parameters = callback.GetParameters();
-        for parameter in parameters do
-            LogInfo $"  |- {parameter.Name}:{parameter.ParameterType.Name}"
-            parameter.ParameterType 
-            |> getTypeDependency
+let TryCreateServiceT<'T> () =
+    TryCreateService (typeof<'T>)
 
-    Console.WriteLine()
+let TryGetServiceT<'T> ():'T option =
+    match TryGetService typeof<'T> with
+    | Some s -> Some (s :?> 'T)
+    | None -> None
 
-//  foreach Constructors
-//      try and resolve
-//          -> recurse resolve for each dependency
-//          TODO: catch cyclic dependency as unresolvable
-//          OK      add to resolved stack
-//          NOPE    continue
-//  filter resolved ctors
-//      remove same size
-//      keep highest
-//  if there's anything left    OK
-//  else                        THROW
-    
-for service in RegisteredServices do
-    service
-    |> TType.CreateFromType
-    |> string
-    |> LogInfo
+match TryGetServiceT<ServiceD>() with
+| Some a -> Log.Info $"""{good "Got"} our Service :slightly_smiling_face:: {a}"""
+| None -> Log.Error $"""Couldn' t {bad "get"} our service {nount<ServiceC>()} :frowning_face:"""
 
-    Console.WriteLine()
-
-"#####\n" |> LogWarning
-
-RegisteredServices
-|> List.iter (
-    fun t ->
-        LogColor "------------------------------------------------------------" ConsoleColor.DarkGray
-        if t |> ResolveType then LogColor $"Resolved :slightly_smiling_face:" ConsoleColor.Green
-        else LogError $"Unresolved :frowning_face:"
-        BreakLineWithIndent ()
-)
-
-"/ END\n" |> LogInfo
+Console.WriteLine()
+"/ END\n" |> Log.Info
