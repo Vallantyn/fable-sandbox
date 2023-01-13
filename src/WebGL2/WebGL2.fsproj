@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- HTML -->
+    <!-- <Compile Include="WebGL.fs" /> -->
+    <Compile Include="HTMLCanvas\Blob.fs" />
+    <Compile Include="HTMLCanvas\HTMLCanvas.fs" />
+    <!-- WebGL -->
+    <Compile Include="WebGL\WebGL.Types.fs" />
+    <Compile Include="WebGL\WebGL.Extensions.fs" />
+    <Compile Include="WebGL\WebGL.Base.fs" />
+    <Compile Include="WebGL\WebGL.Overloads.fs" />
+    <Compile Include="WebGL\WebGL.fs" />
+    <!-- WebGL 2 -->
+    <Compile Include="WebGL2\Base.fs" />
+    <Compile Include="WebGL2\Overloads.fs" />
+    <Compile Include="WebGL2\WebGL2.fs" />
+    <!-- Rendering Contexts -->
+    <Compile Include="Canvas2D\RenderingContext.fs" />
+    <Compile Include="ImageBitmap\RenderingContext.fs" />
+    <!-- <Compile Include="WebGL2\RenderingContext.fs" /> -->
+    <Compile Include="HTMLCanvas\RenderingContext.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

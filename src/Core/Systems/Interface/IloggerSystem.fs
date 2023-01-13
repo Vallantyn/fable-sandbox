@@ -1,4 +1,4 @@
-module Core.Systems.ILogger
+namespace Core.Systems
 
 type ILoggerSystem =
     abstract member Log: string -> unit

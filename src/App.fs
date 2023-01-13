@@ -156,6 +156,7 @@ module App
 //     |> ignore
 
 open Core.Systems
+open Systems
 
 SystemManager.Logger.Log "Hello Warudo!"
 SystemManager.Logger.Debug "Hello Warudo!"
@@ -169,140 +170,106 @@ SystemManager.Logger.Error "Hello Warudo!"
 // WEGBL2 SANDBOX
 
 open Browser.Dom
-open Browser.WebGL
-open Browser.Types
+// open Browser.WebGL
+// open Browser.Types
 open Fable.Core.JS
 open Fable.Core.JsInterop
 open Fable.Core.JS
 
-let canvas = document.getElementsByTagName("canvas")[0] :?> Browser.Types.HTMLCanvasElement
+open WebGL
+open WebGL2
+open Fable.Core
 
-canvas.width <- window.innerWidth
-canvas.height <- window.innerHeight
-
-let gl = canvas.getContext_webgl2 ()
+let window = SystemManager.Window
+let gl = SystemManager.Renderer
+let GL = gl.As<RenderingContext.WebGL2RenderingContext>()
 
 let createShader etype source =
-    let shader = gl.createShader etype
-    gl.shaderSource (shader, source)
-    gl.compileShader shader
-    let success = gl.getShaderParameter (shader, gl.COMPILE_STATUS)
-    if success <> null then Some shader
-    else
-        console.log (gl.getShaderInfoLog shader)
-        gl.deleteShader shader
-        None
+    gl.CreateShader etype
+    |> Shader.SetSource source
+    |> Shader.Compile
+
+    //     let result = gl.getShaderParameter (shader, gl.COMPILE_STATUS);
+    //
+    //     match gl.getShaderParameter (shader, gl.COMPILE_STATUS) with
+    //     | U2.Case2 status when status = true ->
+    //         Some shader
+    //     | _ ->
+    //         console.log (gl.getShaderInfoLog shader)
+    //         gl.deleteShader (Some shader)
+    //         None
+    // | _ -> None
 
 let createProgram vertexShader fragmentShader =
-    let program = gl.createProgram()
+    gl.CreateProgram ()
+    |> Program.AttachShader vertexShader
+    |> Program.AttachShader fragmentShader
+    |> Program.Link
+    // |> Program.GetParameter GL.LINK_STATUS
+    // |> Option.map (fun p ->
+    //
+    // )
 
-    gl.attachShader (program, vertexShader)
-    gl.attachShader (program, fragmentShader)
+    //     match gl.getProgramParameter (program, gl.LINK_STATUS) with
+    //     | None ->
+    //         console.log (gl.getProgramInfoLog program)
+    //         gl.deleteProgram (Some program)
+    //         None
+    //     | _ -> Some program
+    // | _ -> None
 
-    gl.linkProgram program
+let vertexShaderSource = importDefault "${outDir}/../shaders/shader.vert"
+let fragmentShaderSource = importDefault "${outDir}/../shaders/shader.frag"
 
-    let success = gl.getProgramParameter (program, gl.LINK_STATUS)
+let vertexShader = createShader GL.VERTEX_SHADER vertexShaderSource
+let fragmentShader = createShader GL.FRAGMENT_SHADER fragmentShaderSource
 
-    if success <> null then Some program
-    else
-        console.log (gl.getProgramInfoLog program)
-        gl.deleteProgram program
-        None
+let program = createProgram vertexShader fragmentShader
 
-let vertexShaderSource = """#version 300 es
- 
-// an attribute is an input (in) to a vertex shader.
-// It will receive data from a buffer
-in vec4 a_position;
- 
-// all shaders have a main function
-void main() {
- 
-  // gl_Position is a special variable a vertex shader
-  // is responsible for setting
-  gl_Position = a_position;
-}
-"""
- 
-let fragmentShaderSource = """#version 300 es
- 
-// fragment shaders don't have a default precision so we need
-// to pick one. highp is a good default. It means "high precision"
-precision highp float;
- 
-// we need to declare an output for the fragment shader
-out vec4 outColor;
- 
-void main() {
-  // Just set the output to a constant reddish-purple
-  outColor = vec4(1, 0, 0.5, 1);
-}
-"""
+let positionAttributeLocation = program.GetAttributeLocation "a_position"
+let resolutionUniformLocation = program.GetUniformLocation "u_resolution"
 
-let vertexShader = createShader gl.VERTEX_SHADER vertexShaderSource
-let fragmentShader = createShader gl.FRAGMENT_SHADER fragmentShaderSource
-
-console.log vertexShader
-console.log fragmentShader
-
-let program =
-    match (vertexShader, fragmentShader) with
-    | Some v, Some f -> createProgram v f
-    | _, _ -> None
-
-console.log program
-
-let positionAttributeLocation =
-    match program with
-    | Some p -> Some (gl.getAttribLocation (p, "a_position"))
-    | None -> None
-
-console.log positionAttributeLocation
-
-let positionBuffer = gl.createBuffer()
-gl.bindBuffer (gl.ARRAY_BUFFER, positionBuffer)
+let positionBuffer = gl.CreateBuffer()
+positionBuffer.Bind GL.ARRAY_BUFFER
 
 let positions = [|
-    -0.5; -0.5;
-    -0.5;  0.5;
-     0.5; -0.5;
+    10; 20;
+    80; 20;
+    10; 30;
+    10; 30;
+    80; 20;
+    80; 30;
 |]
 
-let f = Constructors.Float32Array.Create(positions)
-gl.bufferData (gl.ARRAY_BUFFER, !^ f.buffer, gl.STATIC_DRAW)
+let ff = Constructors.Float32Array.Create(positions)
+gl.BufferData (gl.ARRAY_BUFFER, (Some (!^ ff.buffer)), gl.STATIC_DRAW)
 
-let vao = gl.createVertexArray()
-gl.bindVertexArray (vao)
+let vao = gl.CreateVertexArray ()
+vao.Bind ()
 
-console.log vao
+positionAttributeLocation.EnableVertexArray ()
 
-match positionAttributeLocation with
-| Some a -> gl.enableVertexAttribArray a
-| None -> console.error "no pal"
-
-let size = 2.0
-let t = gl.FLOAT
+let size = 2
+let t = GL.FLOAT
 let normalize = false
-let stride = 0.0
-let offset = 0.0
+let stride = 0
+let offset = 0
 
-match positionAttributeLocation with
-| Some a -> gl.vertexAttribPointer (a, size, t, normalize, stride, offset)
-| None -> console.error "no pal"
+positionAttributeLocation.VertexPointer (size, t, normalize, stride, offset)
 
-gl.viewport (0, 0, canvas.width, canvas.height)
-gl.clearColor (0, 0, 0, 0)
-gl.clear gl.COLOR_BUFFER_BIT
+GL.viewport (0, 0, window.Width, window.Height)
+GL.clearColor (0f, 0f, 0f, 0f)
+// gl.clear gl.COLOR_BUFFER_BIT
+GL.clear GL.COLOR_BUFFER_BIT
 
-match program with
-| Some p -> gl.useProgram p
-| None -> console.error "no program"
+program.Use ()
+resolutionUniformLocation.SetFloat (single window.Width, single window.Height)
 
-gl.bindVertexArray vao
+vao.Bind ()
 
-let primitiveType = gl.TRIANGLES;
+let primitiveType = GL.TRIANGLES;
 // let offset = 0.0;
-let count = 3.0;
-gl.drawArrays (primitiveType, offset, count)
+let count = 6;
+GL.drawArrays (primitiveType, offset, count)
 
 ()

@@ -6,7 +6,9 @@
     <DefineConstants>NORMALIZED_HSL</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="WebGL2.fs" />
+    <ProjectReference Include="WebGL2\WebGL2.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- Core -->
     <Compile Include="Helpers\Maths\Maths.Operators.fs" />
     <Compile Include="Helpers\Tuples.fs" />
@@ -15,12 +17,16 @@
     <Compile Include="Core\Colors\Conversions.fs" />
     <Compile Include="Core\Types.fs" />
     <Compile Include="Canvas\Canvas.fs" />
-    <Compile Include="Core\Renderers\Renderer.fs" />
     <!-- Systems -->
     <Compile Include="Core\Systems\Interface\ILoggerSystem.fs" />
-    <Compile Include="Core\Systems\Interface\IRendererSystem.fs" />
     <Compile Include="Core\Systems\Implementation\LoggerSystem.fs" />
-    <Compile Include="Core\Systems\Implementation\RendererSystem.fs" />
+    <!-- Systems / Abstract -->
+    <Compile Include="Systems\Abstract\IWindow.fs" />
+    <Compile Include="Systems\Abstract\IRenderer.fs" />
+    <!-- Systems / Concrete -->
+    <Compile Include="Systems\Concrete\HTMLCanvasWindow.fs" />
+    <Compile Include="Systems\Concrete\WebGL2Renderer.fs" />
+    <!-- System Manager -->
     <Compile Include="Core\Systems\SystemManager.fs" />
     <!-- App -->
     <Compile Include="Terminal\Terminal.fs" />

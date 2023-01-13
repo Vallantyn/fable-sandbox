@@ -10,5 +10,11 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1"
   },
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "@types/webgl2": "^0.0.6",
+    "glsl-checker": "^1.0.1",
+    "glslify-loader": "^2.0.0",
+    "raw-loader": "^4.0.2"
+  }
 }

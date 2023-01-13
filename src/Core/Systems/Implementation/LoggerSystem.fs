@@ -1,6 +1,4 @@
-module Core.Systems.Logger
-
-open Core.Systems.ILogger
+namespace Core.Systems
 
 open type System.Console
 

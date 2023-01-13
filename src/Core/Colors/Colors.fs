@@ -1,4 +1,4 @@
-module Core.Colors
+namespace Core.Colors
 
 /// Color stored as **RGBA**, packed in an `uint32` with `R` as the *least significant* octet:  
 /// 

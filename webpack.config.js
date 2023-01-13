@@ -19,5 +19,16 @@ module.exports = {
         port: 8080,
     },
     module: {
+        rules: [
+            {
+                test: /\.(glsl|vert|frag)$/,
+                exclude: /node_modules/,
+                type: 'asset/source',
+                use: [
+                //     'raw-loader',
+                    'glslify-loader'
+                ]
+            }
+        ]
     }
 }
