@@ -10,15 +10,15 @@
     <Compile Include="HTMLCanvas\Blob.fs" />
     <Compile Include="HTMLCanvas\HTMLCanvas.fs" />
     <!-- WebGL -->
-    <Compile Include="WebGL\WebGL.Types.fs" />
-    <Compile Include="WebGL\WebGL.Extensions.fs" />
-    <Compile Include="WebGL\WebGL.Base.fs" />
-    <Compile Include="WebGL\WebGL.Overloads.fs" />
-    <Compile Include="WebGL\WebGL.fs" />
+    <Compile Include="WebGL\Types.fs" />
+    <Compile Include="WebGL\Extensions.fs" />
+    <Compile Include="WebGL\Base.fs" />
+    <Compile Include="WebGL\Overloads.fs" />
+    <Compile Include="WebGL\RenderingContext.fs" />
     <!-- WebGL 2 -->
     <Compile Include="WebGL2\Base.fs" />
     <Compile Include="WebGL2\Overloads.fs" />
-    <Compile Include="WebGL2\WebGL2.fs" />
+    <Compile Include="WebGL2\RenderingContext.fs" />
     <!-- Rendering Contexts -->
     <Compile Include="Canvas2D\RenderingContext.fs" />
     <Compile Include="ImageBitmap\RenderingContext.fs" />

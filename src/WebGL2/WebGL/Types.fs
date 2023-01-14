@@ -20,51 +20,69 @@ open Fable.Core.JS
 // let [<Import("WebGLUniformLocationType","webgl/types")>] WebGLUniformLocationType: WebGLUniformLocationType = jsNative
 // let [<Import("WebGLVertexArrayObjectType","webgl/types")>] WebGLVertexArrayObjectType: WebGLVertexArrayObjectType = jsNative
 
-/// Used for enums.
-type GLenum = uint32
-/// A boolean value.
-type GLboolean = bool
-/// A bit field that stores multiple, logical bits.
-type GLbitfield = uint32
-/// 8-bit twos complement signed integer.
-type GLbyte = int8
-/// 8-bit twos complement unsigned integer.
-type GLubyte = uint8
-/// 16-bit twos complement signed integer.
-type GLshort = int16
-/// 16-bit twos complement unsigned integer.
-type GLushort = uint16
-/// 32-bit twos complement signed integer.
-type GLint = int32
-/// 32-bit twos complement unsigned integer.
-type GLuint = uint32
-/// 32-bit IEEE floating point number.
-type GLfloat = single
-/// Clamped 32-bit IEEE floating point number.
-type GLclampf = single
-/// Used for sizes (e.g. `width` and `height` of the drawing buffer).
-type GLsizei = int32
-/// Special type for pointer arithmetic.
-type GLintptr = int64
-/// Special type for pointer arithmetic.
-type GLsizeiptr = int64
+module GL =
+    /// Used for enums.
+    [<CompiledName("GLenum")>]
+    type Enum = uint32
+    /// A boolean value.
+    [<CompiledName("GLboolean")>]
+    type Boolean = bool
+    /// A bit field that stores multiple, logical bits.
+    [<CompiledName("GLbitfield")>]
+    type Bitfield = uint32
+    /// 8-bit twos complement signed integer.
+    [<CompiledName("GLbyte")>]
+    type Byte = int8
+    /// 8-bit twos complement unsigned integer.
+    [<CompiledName("GLubyte")>]
+    type UByte = uint8
+    /// 16-bit twos complement signed integer.
+    [<CompiledName("GLshort")>]
+    type Short = int16
+    /// 16-bit twos complement unsigned integer.
+    [<CompiledName("GLushort")>]
+    type UShort = uint16
+    /// 32-bit twos complement signed integer.
+    [<CompiledName("GLint")>]
+    type Int = int32
+    /// 32-bit twos complement unsigned integer.
+    [<CompiledName("GLuint")>]
+    type UInt = uint32
+    /// 32-bit IEEE floating point number.
+    [<CompiledName("GLfloat")>]
+    type Float = float
+    /// Clamped 32-bit IEEE floating point number.
+    [<CompiledName("GLclampf")>]
+    type Clampf = float
+    /// Used for sizes (e.g. `width` and `height` of the drawing buffer).
+    [<CompiledName("GLsizei")>]
+    type Sizei = int32
+    /// Special type for pointer arithmetic.
+    [<CompiledName("GLintptr")>]
+    type IntPtr = int64
+    /// Special type for pointer arithmetic.
+    [<CompiledName("GLsizeiptr")>]
+    type SizeiPtr = int64
 
-/// Signed 64-bit integer number.
-type GLint64 = int64
-/// Unsigned 64-bit integer number.
-type GLuint64 = uint64
-/// Unsigned 64-bit integer number.
-type GLuint64EXT = uint64
+    /// Signed 64-bit integer number.
+    [<CompiledName("GLint64")>]
+    type Int64 = int64
+    /// Unsigned 64-bit integer number.
+    [<CompiledName("GLuint64")>]
+    type UInt64 = uint64
+    /// Unsigned 64-bit integer number.
+    [<CompiledName("GLuint64EXT")>]
+    type UInt64EXT = uint64
 
-type Int32List = U2<Int32Array, ResizeArray<GLint>>
-type Uint32List = U2<Uint32Array, ResizeArray<GLuint>>
-type Float32List = U2<Float32Array, ResizeArray<GLfloat>>
+type Int32List = U2<Int32Array, ResizeArray<GL.Int>>
+type Uint32List = U2<Uint32Array, ResizeArray<GL.UInt>>
+type Float32List = U2<Float32Array, ResizeArray<GL.Float>>
 
 /// Part of the WebGL API and represents the information returned by calling the WebGLRenderingContext.getActiveAttrib() and WebGLRenderingContext.getActiveUniform() methods.
 type [<AllowNullLiteral>] WebGLActiveInfo =
     abstract name: string
-    abstract size: GLint
-    abstract ``type``: GLenum
+    abstract size: GL.Int
+    abstract ``type``: GL.Enum
 
 /// Part of the WebGL API and represents an opaque buffer object storing data such as vertices or colors.
 type [<AllowNullLiteral>] WebGLBuffer =
@@ -99,9 +117,9 @@ type [<AllowNullLiteral>] WebGLShader =
 
 /// Part of the WebGL API and represents the information returned by calling the WebGLRenderingContext.getShaderPrecisionFormat() method.
 type [<AllowNullLiteral>] WebGLShaderPrecisionFormat =
-    abstract precision: GLint
-    abstract rangeMax: GLint
-    abstract rangeMin: GLint
+    abstract precision: GL.Int
+    abstract rangeMax: GL.Int
+    abstract rangeMin: GL.Int
 
 type [<AllowNullLiteral>] WebGLSync =
     interface end

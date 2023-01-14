@@ -21,11 +21,33 @@
     <Compile Include="Core\Systems\Interface\ILoggerSystem.fs" />
     <Compile Include="Core\Systems\Implementation\LoggerSystem.fs" />
     <!-- Systems / Abstract -->
-    <Compile Include="Systems\Abstract\IWindow.fs" />
-    <Compile Include="Systems\Abstract\IRenderer.fs" />
+    <Folder Include="Systems\Abstract" />
+    <Compile Include="Systems\Renderer\Common.fs" />
+    <Compile Include="Systems\Renderer\IWindow.fs" />
+    <Compile Include="Systems\Renderer\IShader.fs" />
+    <Compile Include="Systems\Renderer\IActiveInfo.fs" />
+    <Compile Include="Systems\Renderer\IAttributeLocation.fs" />
+    <Compile Include="Systems\Renderer\IUniformLocation.fs" />
+    <Compile Include="Systems\Renderer\IProgram.fs" />
+    <Compile Include="Systems\Renderer\IBuffer.fs" />
+    <Compile Include="Systems\Renderer\IFrameBuffer.fs" />
+    <Compile Include="Systems\Renderer\IRenderBuffer.fs" />
+    <Compile Include="Systems\Renderer\ITexture.fs" />
+    <Compile Include="Systems\Renderer\ISampler.fs" />
+    <Compile Include="Systems\Renderer\IVertexArray.fs" />
+    <Compile Include="Systems\Renderer\IQuery.fs" />
+    <Compile Include="Systems\Renderer\ITransformFeedback.fs" />
+    <Compile Include="Systems\Renderer\IRenderer.fs" />
     <!-- Systems / Concrete -->
-    <Compile Include="Systems\Concrete\HTMLCanvasWindow.fs" />
-    <Compile Include="Systems\Concrete\WebGL2Renderer.fs" />
+    <Compile Include="Platforms\WebGL\Window.fs" />
+    <Compile Include="Platforms\WebGL\Shader.fs" />
+    <Compile Include="Platforms\WebGL\AttributeLocation.fs" />
+    <Compile Include="Platforms\WebGL\UniformLocation.fs" />
+    <Compile Include="Platforms\WebGL\ActiveInfo.fs" />
+    <Compile Include="Platforms\WebGL\Program.fs" />
+    <Compile Include="Platforms\WebGL\Buffer.fs" />
+    <Compile Include="Platforms\WebGL\VertexArray.fs" />
+    <Compile Include="Platforms\WebGL\Renderer.fs" />
     <!-- System Manager -->
     <Compile Include="Core\Systems\SystemManager.fs" />
     <!-- App -->

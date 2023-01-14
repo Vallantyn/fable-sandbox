@@ -1,32 +1,31 @@
 // ts2fable 0.7.1
-namespace WebGL2.Base
+namespace WebGL2.RenderingContext
 
-open System
-open Fable.Core
 open Fable.Core.JS
 
 open WebGL.Types
 
-type [<AllowNullLiteral>] WebGL2RenderingContextBase =
-    abstract beginQuery: target: GLenum * query: WebGLQuery -> unit
-    abstract beginTransformFeedback: primitiveMode: GLenum -> unit
-    abstract bindBufferBase: target: GLenum * index: GLuint * buffer: WebGLBuffer option -> unit
-    abstract bindBufferRange: target: GLenum * index: GLuint * buffer: WebGLBuffer option * offset: GLintptr * size: GLsizeiptr -> unit
-    abstract bindSampler: unit: GLuint * sampler: WebGLSampler option -> unit
-    abstract bindTransformFeedback: target: GLenum * tf: WebGLTransformFeedback option -> unit
+[<AllowNullLiteral; CompiledName("WebGL2RenderingContextBase")>]
+type Base =
+    abstract beginQuery: target: GL.Enum * query: WebGLQuery -> unit
+    abstract beginTransformFeedback: primitiveMode: GL.Enum -> unit
+    abstract bindBufferBase: target: GL.Enum * index: GL.UInt * buffer: WebGLBuffer option -> unit
+    abstract bindBufferRange: target: GL.Enum * index: GL.UInt * buffer: WebGLBuffer option * offset: GL.IntPtr * size: GL.SizeiPtr -> unit
+    abstract bindSampler: unit: GL.UInt * sampler: WebGLSampler option -> unit
+    abstract bindTransformFeedback: target: GL.Enum * tf: WebGLTransformFeedback option -> unit
     abstract bindVertexArray: array: WebGLVertexArrayObject option -> unit
-    abstract blitFramebuffer: srcX0: GLint * srcY0: GLint * srcX1: GLint * srcY1: GLint * dstX0: GLint * dstY0: GLint * dstX1: GLint * dstY1: GLint * mask: GLbitfield * filter: GLenum -> unit
-    abstract clearBufferfi: buffer: GLenum * drawbuffer: GLint * depth: GLfloat * stencil: GLint -> unit
-    abstract clearBufferfv: buffer: GLenum * drawbuffer: GLint * values: Float32List * ?srcOffset: GLuint -> unit
-    abstract clearBufferiv: buffer: GLenum * drawbuffer: GLint * values: Int32List * ?srcOffset: GLuint -> unit
-    abstract clearBufferuiv: buffer: GLenum * drawbuffer: GLint * values: Uint32List * ?srcOffset: GLuint -> unit
-    abstract clientWaitSync: sync: WebGLSync * flags: GLbitfield * timeout: GLuint64 -> GLenum
-    abstract compressedTexImage3D: target: GLenum * level: GLint * internalformat: GLenum * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * imageSize: GLsizei * offset: GLintptr -> unit
-    abstract compressedTexImage3D: target: GLenum * level: GLint * internalformat: GLenum * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * srcData: ArrayBufferView * ?srcOffset: GLuint * ?srcLengthOverride: GLuint -> unit
-    abstract compressedTexSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * format: GLenum * imageSize: GLsizei * offset: GLintptr -> unit
-    abstract compressedTexSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * format: GLenum * srcData: ArrayBufferView * ?srcOffset: GLuint * ?srcLengthOverride: GLuint -> unit
-    abstract copyBufferSubData: readTarget: GLenum * writeTarget: GLenum * readOffset: GLintptr * writeOffset: GLintptr * size: GLsizeiptr -> unit
-    abstract copyTexSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * x: GLint * y: GLint * width: GLsizei * height: GLsizei -> unit
+    abstract blitFramebuffer: srcX0: GL.Int * srcY0: GL.Int * srcX1: GL.Int * srcY1: GL.Int * dstX0: GL.Int * dstY0: GL.Int * dstX1: GL.Int * dstY1: GL.Int * mask: GL.Bitfield * filter: GL.Enum -> unit
+    abstract clearBufferfi: buffer: GL.Enum * drawbuffer: GL.Int * depth: GL.Float * stencil: GL.Int -> unit
+    abstract clearBufferfv: buffer: GL.Enum * drawbuffer: GL.Int * values: Float32List * ?srcOffset: GL.UInt -> unit
+    abstract clearBufferiv: buffer: GL.Enum * drawbuffer: GL.Int * values: Int32List * ?srcOffset: GL.UInt -> unit
+    abstract clearBufferuiv: buffer: GL.Enum * drawbuffer: GL.Int * values: Uint32List * ?srcOffset: GL.UInt -> unit
+    abstract clientWaitSync: sync: WebGLSync * flags: GL.Bitfield * timeout: GL.UInt64 -> GL.Enum
+    abstract compressedTexImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * imageSize: GL.Sizei * offset: GL.IntPtr -> unit
+    abstract compressedTexImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * srcData: ArrayBufferView * ?srcOffset: GL.UInt * ?srcLengthOverride: GL.UInt -> unit
+    abstract compressedTexSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * format: GL.Enum * imageSize: GL.Sizei * offset: GL.IntPtr -> unit
+    abstract compressedTexSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * format: GL.Enum * srcData: ArrayBufferView * ?srcOffset: GL.UInt * ?srcLengthOverride: GL.UInt -> unit
+    abstract copyBufferSubData: readTarget: GL.Enum * writeTarget: GL.Enum * readOffset: GL.IntPtr * writeOffset: GL.IntPtr * size: GL.SizeiPtr -> unit
+    abstract copyTexSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * x: GL.Int * y: GL.Int * width: GL.Sizei * height: GL.Sizei -> unit
     abstract createQuery: unit -> WebGLQuery option
     abstract createSampler: unit -> WebGLSampler option
     abstract createTransformFeedback: unit -> WebGLTransformFeedback option
@@ -36,333 +35,333 @@ type [<AllowNullLiteral>] WebGL2RenderingContextBase =
     abstract deleteSync: sync: WebGLSync option -> unit
     abstract deleteTransformFeedback: tf: WebGLTransformFeedback option -> unit
     abstract deleteVertexArray: vertexArray: WebGLVertexArrayObject option -> unit
-    abstract drawArraysInstanced: mode: GLenum * first: GLint * count: GLsizei * instanceCount: GLsizei -> unit
-    abstract drawBuffers: buffers: ResizeArray<GLenum> -> unit
-    abstract drawElementsInstanced: mode: GLenum * count: GLsizei * ``type``: GLenum * offset: GLintptr * instanceCount: GLsizei -> unit
-    abstract drawRangeElements: mode: GLenum * start: GLuint * ``end``: GLuint * count: GLsizei * ``type``: GLenum * offset: GLintptr -> unit
-    abstract endQuery: target: GLenum -> unit
+    abstract drawArraysInstanced: mode: GL.Enum * first: GL.Int * count: GL.Sizei * instanceCount: GL.Sizei -> unit
+    abstract drawBuffers: buffers: ResizeArray<GL.Enum> -> unit
+    abstract drawElementsInstanced: mode: GL.Enum * count: GL.Sizei * ``type``: GL.Enum * offset: GL.IntPtr * instanceCount: GL.Sizei -> unit
+    abstract drawRangeElements: mode: GL.Enum * start: GL.UInt * ``end``: GL.UInt * count: GL.Sizei * ``type``: GL.Enum * offset: GL.IntPtr -> unit
+    abstract endQuery: target: GL.Enum -> unit
     abstract endTransformFeedback: unit -> unit
-    abstract fenceSync: condition: GLenum * flags: GLbitfield -> WebGLSync option
-    abstract framebufferTextureLayer: target: GLenum * attachment: GLenum * texture: WebGLTexture option * level: GLint * layer: GLint -> unit
-    abstract getActiveUniformBlockName: program: WebGLProgram * uniformBlockIndex: GLuint -> string option
-    abstract getActiveUniformBlockParameter: program: WebGLProgram * uniformBlockIndex: GLuint * pname: GLenum -> obj option
-    abstract getActiveUniforms: program: WebGLProgram * uniformIndices: ResizeArray<GLuint> * pname: GLenum -> obj option
-    abstract getBufferSubData: target: GLenum * srcByteOffset: GLintptr * dstBuffer: ArrayBufferView * ?dstOffset: GLuint * ?length: GLuint -> unit
-    abstract getFragDataLocation: program: WebGLProgram * name: string -> GLint
-    abstract getIndexedParameter: target: GLenum * index: GLuint -> obj option
-    abstract getInternalformatParameter: target: GLenum * internalformat: GLenum * pname: GLenum -> obj option
-    abstract getQuery: target: GLenum * pname: GLenum -> WebGLQuery option
-    abstract getQueryParameter: query: WebGLQuery * pname: GLenum -> obj option
-    abstract getSamplerParameter: sampler: WebGLSampler * pname: GLenum -> obj option
-    abstract getSyncParameter: sync: WebGLSync * pname: GLenum -> obj option
-    abstract getTransformFeedbackVarying: program: WebGLProgram * index: GLuint -> WebGLActiveInfo option
-    abstract getUniformBlockIndex: program: WebGLProgram * uniformBlockName: string -> GLuint
-    abstract getUniformIndices: program: WebGLProgram * uniformNames: ResizeArray<string> -> ResizeArray<GLuint> option
-    abstract invalidateFramebuffer: target: GLenum * attachments: ResizeArray<GLenum> -> unit
-    abstract invalidateSubFramebuffer: target: GLenum * attachments: ResizeArray<GLenum> * x: GLint * y: GLint * width: GLsizei * height: GLsizei -> unit
-    abstract isQuery: query: WebGLQuery option -> GLboolean
-    abstract isSampler: sampler: WebGLSampler option -> GLboolean
-    abstract isSync: sync: WebGLSync option -> GLboolean
-    abstract isTransformFeedback: tf: WebGLTransformFeedback option -> GLboolean
-    abstract isVertexArray: vertexArray: WebGLVertexArrayObject option -> GLboolean
+    abstract fenceSync: condition: GL.Enum * flags: GL.Bitfield -> WebGLSync option
+    abstract framebufferTextureLayer: target: GL.Enum * attachment: GL.Enum * texture: WebGLTexture option * level: GL.Int * layer: GL.Int -> unit
+    abstract getActiveUniformBlockName: program: WebGLProgram * uniformBlockIndex: GL.UInt -> string option
+    abstract getActiveUniformBlockParameter: program: WebGLProgram * uniformBlockIndex: GL.UInt * pname: GL.Enum -> obj option
+    abstract getActiveUniforms: program: WebGLProgram * uniformIndices: ResizeArray<GL.UInt> * pname: GL.Enum -> obj option
+    abstract getBufferSubData: target: GL.Enum * srcByteOffset: GL.IntPtr * dstBuffer: ArrayBufferView * ?dstOffset: GL.UInt * ?length: GL.UInt -> unit
+    abstract getFragDataLocation: program: WebGLProgram * name: string -> GL.Int
+    abstract getIndexedParameter: target: GL.Enum * index: GL.UInt -> obj option
+    abstract getInternalformatParameter: target: GL.Enum * internalformat: GL.Enum * pname: GL.Enum -> obj option
+    abstract getQuery: target: GL.Enum * pname: GL.Enum -> WebGLQuery option
+    abstract getQueryParameter: query: WebGLQuery * pname: GL.Enum -> obj option
+    abstract getSamplerParameter: sampler: WebGLSampler * pname: GL.Enum -> obj option
+    abstract getSyncParameter: sync: WebGLSync * pname: GL.Enum -> obj option
+    abstract getTransformFeedbackVarying: program: WebGLProgram * index: GL.UInt -> WebGLActiveInfo option
+    abstract getUniformBlockIndex: program: WebGLProgram * uniformBlockName: string -> GL.UInt
+    abstract getUniformIndices: program: WebGLProgram * uniformNames: ResizeArray<string> -> ResizeArray<GL.UInt> option
+    abstract invalidateFramebuffer: target: GL.Enum * attachments: ResizeArray<GL.Enum> -> unit
+    abstract invalidateSubFramebuffer: target: GL.Enum * attachments: ResizeArray<GL.Enum> * x: GL.Int * y: GL.Int * width: GL.Sizei * height: GL.Sizei -> unit
+    abstract isQuery: query: WebGLQuery option -> GL.Boolean
+    abstract isSampler: sampler: WebGLSampler option -> GL.Boolean
+    abstract isSync: sync: WebGLSync option -> GL.Boolean
+    abstract isTransformFeedback: tf: WebGLTransformFeedback option -> GL.Boolean
+    abstract isVertexArray: vertexArray: WebGLVertexArrayObject option -> GL.Boolean
     abstract pauseTransformFeedback: unit -> unit
-    abstract readBuffer: src: GLenum -> unit
-    abstract renderbufferStorageMultisample: target: GLenum * samples: GLsizei * internalformat: GLenum * width: GLsizei * height: GLsizei -> unit
+    abstract readBuffer: src: GL.Enum -> unit
+    abstract renderbufferStorageMultisample: target: GL.Enum * samples: GL.Sizei * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei -> unit
     abstract resumeTransformFeedback: unit -> unit
-    abstract samplerParameterf: sampler: WebGLSampler * pname: GLenum * param: GLfloat -> unit
-    abstract samplerParameteri: sampler: WebGLSampler * pname: GLenum * param: GLint -> unit
-    abstract texImage3D: target: GLenum * level: GLint * internalformat: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * format: GLenum * ``type``: GLenum * pboOffset: GLintptr -> unit
-    // abstract texImage3D: target: GLenum * level: GLint * internalformat: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * format: GLenum * ``type``: GLenum * source: TexImageSource -> unit
-    abstract texImage3D: target: GLenum * level: GLint * internalformat: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * format: GLenum * ``type``: GLenum * srcData: ArrayBufferView option -> unit
-    abstract texImage3D: target: GLenum * level: GLint * internalformat: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * border: GLint * format: GLenum * ``type``: GLenum * srcData: ArrayBufferView * srcOffset: GLuint -> unit
-    abstract texStorage2D: target: GLenum * levels: GLsizei * internalformat: GLenum * width: GLsizei * height: GLsizei -> unit
-    abstract texStorage3D: target: GLenum * levels: GLsizei * internalformat: GLenum * width: GLsizei * height: GLsizei * depth: GLsizei -> unit
-    abstract texSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * format: GLenum * ``type``: GLenum * pboOffset: GLintptr -> unit
-    // abstract texSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * format: GLenum * ``type``: GLenum * source: TexImageSource -> unit
-    abstract texSubImage3D: target: GLenum * level: GLint * xoffset: GLint * yoffset: GLint * zoffset: GLint * width: GLsizei * height: GLsizei * depth: GLsizei * format: GLenum * ``type``: GLenum * srcData: ArrayBufferView option * ?srcOffset: GLuint -> unit
-    abstract transformFeedbackVaryings: program: WebGLProgram * varyings: ResizeArray<string> * bufferMode: GLenum -> unit
-    abstract uniform1ui: location: WebGLUniformLocation option * v0: GLuint -> unit
-    abstract uniform1uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniform2ui: location: WebGLUniformLocation option * v0: GLuint * v1: GLuint -> unit
-    abstract uniform2uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniform3ui: location: WebGLUniformLocation option * v0: GLuint * v1: GLuint * v2: GLuint -> unit
-    abstract uniform3uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniform4ui: location: WebGLUniformLocation option * v0: GLuint * v1: GLuint * v2: GLuint * v3: GLuint -> unit
-    abstract uniform4uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformBlockBinding: program: WebGLProgram * uniformBlockIndex: GLuint * uniformBlockBinding: GLuint -> unit
-    abstract uniformMatrix2x3fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformMatrix2x4fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformMatrix3x2fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformMatrix3x4fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformMatrix4x2fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract uniformMatrix4x3fv: location: WebGLUniformLocation option * transpose: GLboolean * data: Float32List * ?srcOffset: GLuint * ?srcLength: GLuint -> unit
-    abstract vertexAttribDivisor: index: GLuint * divisor: GLuint -> unit
-    abstract vertexAttribI4i: index: GLuint * x: GLint * y: GLint * z: GLint * w: GLint -> unit
-    abstract vertexAttribI4iv: index: GLuint * values: Int32List -> unit
-    abstract vertexAttribI4ui: index: GLuint * x: GLuint * y: GLuint * z: GLuint * w: GLuint -> unit
-    abstract vertexAttribI4uiv: index: GLuint * values: Uint32List -> unit
-    abstract vertexAttribIPointer: index: GLuint * size: GLint * ``type``: GLenum * stride: GLsizei * offset: GLintptr -> unit
-    abstract waitSync: sync: WebGLSync * flags: GLbitfield * timeout: GLint64 -> unit
-    abstract ACTIVE_UNIFORM_BLOCKS: GLenum
-    abstract ALREADY_SIGNALED: GLenum
-    abstract ANY_SAMPLES_PASSED: GLenum
-    abstract ANY_SAMPLES_PASSED_CONSERVATIVE: GLenum
-    abstract COLOR: GLenum
-    abstract COLOR_ATTACHMENT1: GLenum
-    abstract COLOR_ATTACHMENT10: GLenum
-    abstract COLOR_ATTACHMENT11: GLenum
-    abstract COLOR_ATTACHMENT12: GLenum
-    abstract COLOR_ATTACHMENT13: GLenum
-    abstract COLOR_ATTACHMENT14: GLenum
-    abstract COLOR_ATTACHMENT15: GLenum
-    abstract COLOR_ATTACHMENT2: GLenum
-    abstract COLOR_ATTACHMENT3: GLenum
-    abstract COLOR_ATTACHMENT4: GLenum
-    abstract COLOR_ATTACHMENT5: GLenum
-    abstract COLOR_ATTACHMENT6: GLenum
-    abstract COLOR_ATTACHMENT7: GLenum
-    abstract COLOR_ATTACHMENT8: GLenum
-    abstract COLOR_ATTACHMENT9: GLenum
-    abstract COMPARE_REF_TO_TEXTURE: GLenum
-    abstract CONDITION_SATISFIED: GLenum
-    abstract COPY_READ_BUFFER: GLenum
-    abstract COPY_READ_BUFFER_BINDING: GLenum
-    abstract COPY_WRITE_BUFFER: GLenum
-    abstract COPY_WRITE_BUFFER_BINDING: GLenum
-    abstract CURRENT_QUERY: GLenum
-    abstract DEPTH: GLenum
-    abstract DEPTH24_STENCIL8: GLenum
-    abstract DEPTH32F_STENCIL8: GLenum
-    abstract DEPTH_COMPONENT24: GLenum
-    abstract DEPTH_COMPONENT32F: GLenum
-    abstract DRAW_BUFFER0: GLenum
-    abstract DRAW_BUFFER1: GLenum
-    abstract DRAW_BUFFER10: GLenum
-    abstract DRAW_BUFFER11: GLenum
-    abstract DRAW_BUFFER12: GLenum
-    abstract DRAW_BUFFER13: GLenum
-    abstract DRAW_BUFFER14: GLenum
-    abstract DRAW_BUFFER15: GLenum
-    abstract DRAW_BUFFER2: GLenum
-    abstract DRAW_BUFFER3: GLenum
-    abstract DRAW_BUFFER4: GLenum
-    abstract DRAW_BUFFER5: GLenum
-    abstract DRAW_BUFFER6: GLenum
-    abstract DRAW_BUFFER7: GLenum
-    abstract DRAW_BUFFER8: GLenum
-    abstract DRAW_BUFFER9: GLenum
-    abstract DRAW_FRAMEBUFFER: GLenum
-    abstract DRAW_FRAMEBUFFER_BINDING: GLenum
-    abstract DYNAMIC_COPY: GLenum
-    abstract DYNAMIC_READ: GLenum
-    abstract FLOAT_32_UNSIGNED_INT_24_8_REV: GLenum
-    abstract FLOAT_MAT2x3: GLenum
-    abstract FLOAT_MAT2x4: GLenum
-    abstract FLOAT_MAT3x2: GLenum
-    abstract FLOAT_MAT3x4: GLenum
-    abstract FLOAT_MAT4x2: GLenum
-    abstract FLOAT_MAT4x3: GLenum
-    abstract FRAGMENT_SHADER_DERIVATIVE_HINT: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_BLUE_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_GREEN_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_RED_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE: GLenum
-    abstract FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER: GLenum
-    abstract FRAMEBUFFER_DEFAULT: GLenum
-    abstract FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: GLenum
-    abstract HALF_FLOAT: GLenum
-    abstract INTERLEAVED_ATTRIBS: GLenum
-    abstract INT_2_10_10_10_REV: GLenum
-    abstract INT_SAMPLER_2D: GLenum
-    abstract INT_SAMPLER_2D_ARRAY: GLenum
-    abstract INT_SAMPLER_3D: GLenum
-    abstract INT_SAMPLER_CUBE: GLenum
-    abstract INVALID_INDEX: GLenum
-    abstract MAX: GLenum
-    abstract MAX_3D_TEXTURE_SIZE: GLenum
-    abstract MAX_ARRAY_TEXTURE_LAYERS: GLenum
-    abstract MAX_CLIENT_WAIT_TIMEOUT_WEBGL: GLenum
-    abstract MAX_COLOR_ATTACHMENTS: GLenum
-    abstract MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS: GLenum
-    abstract MAX_COMBINED_UNIFORM_BLOCKS: GLenum
-    abstract MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS: GLenum
-    abstract MAX_DRAW_BUFFERS: GLenum
-    abstract MAX_ELEMENTS_INDICES: GLenum
-    abstract MAX_ELEMENTS_VERTICES: GLenum
-    abstract MAX_ELEMENT_INDEX: GLenum
-    abstract MAX_FRAGMENT_INPUT_COMPONENTS: GLenum
-    abstract MAX_FRAGMENT_UNIFORM_BLOCKS: GLenum
-    abstract MAX_FRAGMENT_UNIFORM_COMPONENTS: GLenum
-    abstract MAX_PROGRAM_TEXEL_OFFSET: GLenum
-    abstract MAX_SAMPLES: GLenum
-    abstract MAX_SERVER_WAIT_TIMEOUT: GLenum
-    abstract MAX_TEXTURE_LOD_BIAS: GLenum
-    abstract MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: GLenum
-    abstract MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS: GLenum
-    abstract MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS: GLenum
-    abstract MAX_UNIFORM_BLOCK_SIZE: GLenum
-    abstract MAX_UNIFORM_BUFFER_BINDINGS: GLenum
-    abstract MAX_VARYING_COMPONENTS: GLenum
-    abstract MAX_VERTEX_OUTPUT_COMPONENTS: GLenum
-    abstract MAX_VERTEX_UNIFORM_BLOCKS: GLenum
-    abstract MAX_VERTEX_UNIFORM_COMPONENTS: GLenum
-    abstract MIN: GLenum
-    abstract MIN_PROGRAM_TEXEL_OFFSET: GLenum
-    abstract OBJECT_TYPE: GLenum
-    abstract PACK_ROW_LENGTH: GLenum
-    abstract PACK_SKIP_PIXELS: GLenum
-    abstract PACK_SKIP_ROWS: GLenum
-    abstract PIXEL_PACK_BUFFER: GLenum
-    abstract PIXEL_PACK_BUFFER_BINDING: GLenum
-    abstract PIXEL_UNPACK_BUFFER: GLenum
-    abstract PIXEL_UNPACK_BUFFER_BINDING: GLenum
-    abstract QUERY_RESULT: GLenum
-    abstract QUERY_RESULT_AVAILABLE: GLenum
-    abstract R11F_G11F_B10F: GLenum
-    abstract R16F: GLenum
-    abstract R16I: GLenum
-    abstract R16UI: GLenum
-    abstract R32F: GLenum
-    abstract R32I: GLenum
-    abstract R32UI: GLenum
-    abstract R8: GLenum
-    abstract R8I: GLenum
-    abstract R8UI: GLenum
-    abstract R8_SNORM: GLenum
-    abstract RASTERIZER_DISCARD: GLenum
-    abstract READ_BUFFER: GLenum
-    abstract READ_FRAMEBUFFER: GLenum
-    abstract READ_FRAMEBUFFER_BINDING: GLenum
-    abstract RED: GLenum
-    abstract RED_INTEGER: GLenum
-    abstract RENDERBUFFER_SAMPLES: GLenum
-    abstract RG: GLenum
-    abstract RG16F: GLenum
-    abstract RG16I: GLenum
-    abstract RG16UI: GLenum
-    abstract RG32F: GLenum
-    abstract RG32I: GLenum
-    abstract RG32UI: GLenum
-    abstract RG8: GLenum
-    abstract RG8I: GLenum
-    abstract RG8UI: GLenum
-    abstract RG8_SNORM: GLenum
-    abstract RGB10_A2: GLenum
-    abstract RGB10_A2UI: GLenum
-    abstract RGB16F: GLenum
-    abstract RGB16I: GLenum
-    abstract RGB16UI: GLenum
-    abstract RGB32F: GLenum
-    abstract RGB32I: GLenum
-    abstract RGB32UI: GLenum
-    abstract RGB8: GLenum
-    abstract RGB8I: GLenum
-    abstract RGB8UI: GLenum
-    abstract RGB8_SNORM: GLenum
-    abstract RGB9_E5: GLenum
-    abstract RGBA16F: GLenum
-    abstract RGBA16I: GLenum
-    abstract RGBA16UI: GLenum
-    abstract RGBA32F: GLenum
-    abstract RGBA32I: GLenum
-    abstract RGBA32UI: GLenum
-    abstract RGBA8: GLenum
-    abstract RGBA8I: GLenum
-    abstract RGBA8UI: GLenum
-    abstract RGBA8_SNORM: GLenum
-    abstract RGBA_INTEGER: GLenum
-    abstract RGB_INTEGER: GLenum
-    abstract RG_INTEGER: GLenum
-    abstract SAMPLER_2D_ARRAY: GLenum
-    abstract SAMPLER_2D_ARRAY_SHADOW: GLenum
-    abstract SAMPLER_2D_SHADOW: GLenum
-    abstract SAMPLER_3D: GLenum
-    abstract SAMPLER_BINDING: GLenum
-    abstract SAMPLER_CUBE_SHADOW: GLenum
-    abstract SEPARATE_ATTRIBS: GLenum
-    abstract SIGNALED: GLenum
-    abstract SIGNED_NORMALIZED: GLenum
-    abstract SRGB: GLenum
-    abstract SRGB8: GLenum
-    abstract SRGB8_ALPHA8: GLenum
-    abstract STATIC_COPY: GLenum
-    abstract STATIC_READ: GLenum
-    abstract STENCIL: GLenum
-    abstract STREAM_COPY: GLenum
-    abstract STREAM_READ: GLenum
-    abstract SYNC_CONDITION: GLenum
-    abstract SYNC_FENCE: GLenum
-    abstract SYNC_FLAGS: GLenum
-    abstract SYNC_FLUSH_COMMANDS_BIT: GLenum
-    abstract SYNC_GPU_COMMANDS_COMPLETE: GLenum
-    abstract SYNC_STATUS: GLenum
-    abstract TEXTURE_2D_ARRAY: GLenum
-    abstract TEXTURE_3D: GLenum
-    abstract TEXTURE_BASE_LEVEL: GLenum
-    abstract TEXTURE_BINDING_2D_ARRAY: GLenum
-    abstract TEXTURE_BINDING_3D: GLenum
-    abstract TEXTURE_COMPARE_FUNC: GLenum
-    abstract TEXTURE_COMPARE_MODE: GLenum
-    abstract TEXTURE_IMMUTABLE_FORMAT: GLenum
-    abstract TEXTURE_IMMUTABLE_LEVELS: GLenum
-    abstract TEXTURE_MAX_LEVEL: GLenum
-    abstract TEXTURE_MAX_LOD: GLenum
-    abstract TEXTURE_MIN_LOD: GLenum
-    abstract TEXTURE_WRAP_R: GLenum
-    abstract TIMEOUT_EXPIRED: GLenum
-    abstract TIMEOUT_IGNORED: GLint64
-    abstract TRANSFORM_FEEDBACK: GLenum
-    abstract TRANSFORM_FEEDBACK_ACTIVE: GLenum
-    abstract TRANSFORM_FEEDBACK_BINDING: GLenum
-    abstract TRANSFORM_FEEDBACK_BUFFER: GLenum
-    abstract TRANSFORM_FEEDBACK_BUFFER_BINDING: GLenum
-    abstract TRANSFORM_FEEDBACK_BUFFER_MODE: GLenum
-    abstract TRANSFORM_FEEDBACK_BUFFER_SIZE: GLenum
-    abstract TRANSFORM_FEEDBACK_BUFFER_START: GLenum
-    abstract TRANSFORM_FEEDBACK_PAUSED: GLenum
-    abstract TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN: GLenum
-    abstract TRANSFORM_FEEDBACK_VARYINGS: GLenum
-    abstract UNIFORM_ARRAY_STRIDE: GLenum
-    abstract UNIFORM_BLOCK_ACTIVE_UNIFORMS: GLenum
-    abstract UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES: GLenum
-    abstract UNIFORM_BLOCK_BINDING: GLenum
-    abstract UNIFORM_BLOCK_DATA_SIZE: GLenum
-    abstract UNIFORM_BLOCK_INDEX: GLenum
-    abstract UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER: GLenum
-    abstract UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER: GLenum
-    abstract UNIFORM_BUFFER: GLenum
-    abstract UNIFORM_BUFFER_BINDING: GLenum
-    abstract UNIFORM_BUFFER_OFFSET_ALIGNMENT: GLenum
-    abstract UNIFORM_BUFFER_SIZE: GLenum
-    abstract UNIFORM_BUFFER_START: GLenum
-    abstract UNIFORM_IS_ROW_MAJOR: GLenum
-    abstract UNIFORM_MATRIX_STRIDE: GLenum
-    abstract UNIFORM_OFFSET: GLenum
-    abstract UNIFORM_SIZE: GLenum
-    abstract UNIFORM_TYPE: GLenum
-    abstract UNPACK_IMAGE_HEIGHT: GLenum
-    abstract UNPACK_ROW_LENGTH: GLenum
-    abstract UNPACK_SKIP_IMAGES: GLenum
-    abstract UNPACK_SKIP_PIXELS: GLenum
-    abstract UNPACK_SKIP_ROWS: GLenum
-    abstract UNSIGNALED: GLenum
-    abstract UNSIGNED_INT_10F_11F_11F_REV: GLenum
-    abstract UNSIGNED_INT_24_8: GLenum
-    abstract UNSIGNED_INT_2_10_10_10_REV: GLenum
-    abstract UNSIGNED_INT_5_9_9_9_REV: GLenum
-    abstract UNSIGNED_INT_SAMPLER_2D: GLenum
-    abstract UNSIGNED_INT_SAMPLER_2D_ARRAY: GLenum
-    abstract UNSIGNED_INT_SAMPLER_3D: GLenum
-    abstract UNSIGNED_INT_SAMPLER_CUBE: GLenum
-    abstract UNSIGNED_INT_VEC2: GLenum
-    abstract UNSIGNED_INT_VEC3: GLenum
-    abstract UNSIGNED_INT_VEC4: GLenum
-    abstract UNSIGNED_NORMALIZED: GLenum
-    abstract VERTEX_ARRAY_BINDING: GLenum
-    abstract VERTEX_ATTRIB_ARRAY_DIVISOR: GLenum
-    abstract VERTEX_ATTRIB_ARRAY_INTEGER: GLenum
-    abstract WAIT_FAILED: GLenum
+    abstract samplerParameterf: sampler: WebGLSampler * pname: GL.Enum * param: GL.Float -> unit
+    abstract samplerParameteri: sampler: WebGLSampler * pname: GL.Enum * param: GL.Int -> unit
+    abstract texImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * format: GL.Enum * ``type``: GL.Enum * pboOffset: GL.IntPtr -> unit
+    // abstract texImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * format: GL.Enum * ``type``: GL.Enum * source: TexImageSource -> unit
+    abstract texImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * format: GL.Enum * ``type``: GL.Enum * srcData: ArrayBufferView option -> unit
+    abstract texImage3D: target: GL.Enum * level: GL.Int * internalformat: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * border: GL.Int * format: GL.Enum * ``type``: GL.Enum * srcData: ArrayBufferView * srcOffset: GL.UInt -> unit
+    abstract texStorage2D: target: GL.Enum * levels: GL.Sizei * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei -> unit
+    abstract texStorage3D: target: GL.Enum * levels: GL.Sizei * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei -> unit
+    abstract texSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * format: GL.Enum * ``type``: GL.Enum * pboOffset: GL.IntPtr -> unit
+    // abstract texSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * format: GL.Enum * ``type``: GL.Enum * source: TexImageSource -> unit
+    abstract texSubImage3D: target: GL.Enum * level: GL.Int * xoffset: GL.Int * yoffset: GL.Int * zoffset: GL.Int * width: GL.Sizei * height: GL.Sizei * depth: GL.Sizei * format: GL.Enum * ``type``: GL.Enum * srcData: ArrayBufferView option * ?srcOffset: GL.UInt -> unit
+    abstract transformFeedbackVaryings: program: WebGLProgram * varyings: ResizeArray<string> * bufferMode: GL.Enum -> unit
+    abstract uniform1ui: location: WebGLUniformLocation option * v0: GL.UInt -> unit
+    abstract uniform1uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniform2ui: location: WebGLUniformLocation option * v0: GL.UInt * v1: GL.UInt -> unit
+    abstract uniform2uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniform3ui: location: WebGLUniformLocation option * v0: GL.UInt * v1: GL.UInt * v2: GL.UInt -> unit
+    abstract uniform3uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniform4ui: location: WebGLUniformLocation option * v0: GL.UInt * v1: GL.UInt * v2: GL.UInt * v3: GL.UInt -> unit
+    abstract uniform4uiv: location: WebGLUniformLocation option * data: Uint32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformBlockBinding: program: WebGLProgram * uniformBlockIndex: GL.UInt * uniformBlockBinding: GL.UInt -> unit
+    abstract uniformMatrix2x3fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformMatrix2x4fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformMatrix3x2fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformMatrix3x4fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformMatrix4x2fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract uniformMatrix4x3fv: location: WebGLUniformLocation option * transpose: GL.Boolean * data: Float32List * ?srcOffset: GL.UInt * ?srcLength: GL.UInt -> unit
+    abstract vertexAttribDivisor: index: GL.UInt * divisor: GL.UInt -> unit
+    abstract vertexAttribI4i: index: GL.UInt * x: GL.Int * y: GL.Int * z: GL.Int * w: GL.Int -> unit
+    abstract vertexAttribI4iv: index: GL.UInt * values: Int32List -> unit
+    abstract vertexAttribI4ui: index: GL.UInt * x: GL.UInt * y: GL.UInt * z: GL.UInt * w: GL.UInt -> unit
+    abstract vertexAttribI4uiv: index: GL.UInt * values: Uint32List -> unit
+    abstract vertexAttribIPointer: index: GL.UInt * size: GL.Int * ``type``: GL.Enum * stride: GL.Sizei * offset: GL.IntPtr -> unit
+    abstract waitSync: sync: WebGLSync * flags: GL.Bitfield * timeout: GL.Int64 -> unit
+    abstract ACTIVE_UNIFORM_BLOCKS: GL.Enum
+    abstract ALREADY_SIGNALED: GL.Enum
+    abstract ANY_SAMPLES_PASSED: GL.Enum
+    abstract ANY_SAMPLES_PASSED_CONSERVATIVE: GL.Enum
+    abstract COLOR: GL.Enum
+    abstract COLOR_ATTACHMENT1: GL.Enum
+    abstract COLOR_ATTACHMENT10: GL.Enum
+    abstract COLOR_ATTACHMENT11: GL.Enum
+    abstract COLOR_ATTACHMENT12: GL.Enum
+    abstract COLOR_ATTACHMENT13: GL.Enum
+    abstract COLOR_ATTACHMENT14: GL.Enum
+    abstract COLOR_ATTACHMENT15: GL.Enum
+    abstract COLOR_ATTACHMENT2: GL.Enum
+    abstract COLOR_ATTACHMENT3: GL.Enum
+    abstract COLOR_ATTACHMENT4: GL.Enum
+    abstract COLOR_ATTACHMENT5: GL.Enum
+    abstract COLOR_ATTACHMENT6: GL.Enum
+    abstract COLOR_ATTACHMENT7: GL.Enum
+    abstract COLOR_ATTACHMENT8: GL.Enum
+    abstract COLOR_ATTACHMENT9: GL.Enum
+    abstract COMPARE_REF_TO_TEXTURE: GL.Enum
+    abstract CONDITION_SATISFIED: GL.Enum
+    abstract COPY_READ_BUFFER: GL.Enum
+    abstract COPY_READ_BUFFER_BINDING: GL.Enum
+    abstract COPY_WRITE_BUFFER: GL.Enum
+    abstract COPY_WRITE_BUFFER_BINDING: GL.Enum
+    abstract CURRENT_QUERY: GL.Enum
+    abstract DEPTH: GL.Enum
+    abstract DEPTH24_STENCIL8: GL.Enum
+    abstract DEPTH32F_STENCIL8: GL.Enum
+    abstract DEPTH_COMPONENT24: GL.Enum
+    abstract DEPTH_COMPONENT32F: GL.Enum
+    abstract DRAW_BUFFER0: GL.Enum
+    abstract DRAW_BUFFER1: GL.Enum
+    abstract DRAW_BUFFER10: GL.Enum
+    abstract DRAW_BUFFER11: GL.Enum
+    abstract DRAW_BUFFER12: GL.Enum
+    abstract DRAW_BUFFER13: GL.Enum
+    abstract DRAW_BUFFER14: GL.Enum
+    abstract DRAW_BUFFER15: GL.Enum
+    abstract DRAW_BUFFER2: GL.Enum
+    abstract DRAW_BUFFER3: GL.Enum
+    abstract DRAW_BUFFER4: GL.Enum
+    abstract DRAW_BUFFER5: GL.Enum
+    abstract DRAW_BUFFER6: GL.Enum
+    abstract DRAW_BUFFER7: GL.Enum
+    abstract DRAW_BUFFER8: GL.Enum
+    abstract DRAW_BUFFER9: GL.Enum
+    abstract DRAW_FRAMEBUFFER: GL.Enum
+    abstract DRAW_FRAMEBUFFER_BINDING: GL.Enum
+    abstract DYNAMIC_COPY: GL.Enum
+    abstract DYNAMIC_READ: GL.Enum
+    abstract FLOAT_32_UNSIGNED_INT_24_8_REV: GL.Enum
+    abstract FLOAT_MAT2x3: GL.Enum
+    abstract FLOAT_MAT2x4: GL.Enum
+    abstract FLOAT_MAT3x2: GL.Enum
+    abstract FLOAT_MAT3x4: GL.Enum
+    abstract FLOAT_MAT4x2: GL.Enum
+    abstract FLOAT_MAT4x3: GL.Enum
+    abstract FRAGMENT_SHADER_DERIVATIVE_HINT: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_BLUE_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_GREEN_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_RED_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE: GL.Enum
+    abstract FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER: GL.Enum
+    abstract FRAMEBUFFER_DEFAULT: GL.Enum
+    abstract FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: GL.Enum
+    abstract HALF_FLOAT: GL.Enum
+    abstract INTERLEAVED_ATTRIBS: GL.Enum
+    abstract INT_2_10_10_10_REV: GL.Enum
+    abstract INT_SAMPLER_2D: GL.Enum
+    abstract INT_SAMPLER_2D_ARRAY: GL.Enum
+    abstract INT_SAMPLER_3D: GL.Enum
+    abstract INT_SAMPLER_CUBE: GL.Enum
+    abstract INVALID_INDEX: GL.Enum
+    abstract MAX: GL.Enum
+    abstract MAX_3D_TEXTURE_SIZE: GL.Enum
+    abstract MAX_ARRAY_TEXTURE_LAYERS: GL.Enum
+    abstract MAX_CLIENT_WAIT_TIMEOUT_WEBGL: GL.Enum
+    abstract MAX_COLOR_ATTACHMENTS: GL.Enum
+    abstract MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS: GL.Enum
+    abstract MAX_COMBINED_UNIFORM_BLOCKS: GL.Enum
+    abstract MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS: GL.Enum
+    abstract MAX_DRAW_BUFFERS: GL.Enum
+    abstract MAX_ELEMENTS_INDICES: GL.Enum
+    abstract MAX_ELEMENTS_VERTICES: GL.Enum
+    abstract MAX_ELEMENT_INDEX: GL.Enum
+    abstract MAX_FRAGMENT_INPUT_COMPONENTS: GL.Enum
+    abstract MAX_FRAGMENT_UNIFORM_BLOCKS: GL.Enum
+    abstract MAX_FRAGMENT_UNIFORM_COMPONENTS: GL.Enum
+    abstract MAX_PROGRAM_TEXEL_OFFSET: GL.Enum
+    abstract MAX_SAMPLES: GL.Enum
+    abstract MAX_SERVER_WAIT_TIMEOUT: GL.Enum
+    abstract MAX_TEXTURE_LOD_BIAS: GL.Enum
+    abstract MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: GL.Enum
+    abstract MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS: GL.Enum
+    abstract MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS: GL.Enum
+    abstract MAX_UNIFORM_BLOCK_SIZE: GL.Enum
+    abstract MAX_UNIFORM_BUFFER_BINDINGS: GL.Enum
+    abstract MAX_VARYING_COMPONENTS: GL.Enum
+    abstract MAX_VERTEX_OUTPUT_COMPONENTS: GL.Enum
+    abstract MAX_VERTEX_UNIFORM_BLOCKS: GL.Enum
+    abstract MAX_VERTEX_UNIFORM_COMPONENTS: GL.Enum
+    abstract MIN: GL.Enum
+    abstract MIN_PROGRAM_TEXEL_OFFSET: GL.Enum
+    abstract OBJECT_TYPE: GL.Enum
+    abstract PACK_ROW_LENGTH: GL.Enum
+    abstract PACK_SKIP_PIXELS: GL.Enum
+    abstract PACK_SKIP_ROWS: GL.Enum
+    abstract PIXEL_PACK_BUFFER: GL.Enum
+    abstract PIXEL_PACK_BUFFER_BINDING: GL.Enum
+    abstract PIXEL_UNPACK_BUFFER: GL.Enum
+    abstract PIXEL_UNPACK_BUFFER_BINDING: GL.Enum
+    abstract QUERY_RESULT: GL.Enum
+    abstract QUERY_RESULT_AVAILABLE: GL.Enum
+    abstract R11F_G11F_B10F: GL.Enum
+    abstract R16F: GL.Enum
+    abstract R16I: GL.Enum
+    abstract R16UI: GL.Enum
+    abstract R32F: GL.Enum
+    abstract R32I: GL.Enum
+    abstract R32UI: GL.Enum
+    abstract R8: GL.Enum
+    abstract R8I: GL.Enum
+    abstract R8UI: GL.Enum
+    abstract R8_SNORM: GL.Enum
+    abstract RASTERIZER_DISCARD: GL.Enum
+    abstract READ_BUFFER: GL.Enum
+    abstract READ_FRAMEBUFFER: GL.Enum
+    abstract READ_FRAMEBUFFER_BINDING: GL.Enum
+    abstract RED: GL.Enum
+    abstract RED_INTEGER: GL.Enum
+    abstract RENDERBUFFER_SAMPLES: GL.Enum
+    abstract RG: GL.Enum
+    abstract RG16F: GL.Enum
+    abstract RG16I: GL.Enum
+    abstract RG16UI: GL.Enum
+    abstract RG32F: GL.Enum
+    abstract RG32I: GL.Enum
+    abstract RG32UI: GL.Enum
+    abstract RG8: GL.Enum
+    abstract RG8I: GL.Enum
+    abstract RG8UI: GL.Enum
+    abstract RG8_SNORM: GL.Enum
+    abstract RGB10_A2: GL.Enum
+    abstract RGB10_A2UI: GL.Enum
+    abstract RGB16F: GL.Enum
+    abstract RGB16I: GL.Enum
+    abstract RGB16UI: GL.Enum
+    abstract RGB32F: GL.Enum
+    abstract RGB32I: GL.Enum
+    abstract RGB32UI: GL.Enum
+    abstract RGB8: GL.Enum
+    abstract RGB8I: GL.Enum
+    abstract RGB8UI: GL.Enum
+    abstract RGB8_SNORM: GL.Enum
+    abstract RGB9_E5: GL.Enum
+    abstract RGBA16F: GL.Enum
+    abstract RGBA16I: GL.Enum
+    abstract RGBA16UI: GL.Enum
+    abstract RGBA32F: GL.Enum
+    abstract RGBA32I: GL.Enum
+    abstract RGBA32UI: GL.Enum
+    abstract RGBA8: GL.Enum
+    abstract RGBA8I: GL.Enum
+    abstract RGBA8UI: GL.Enum
+    abstract RGBA8_SNORM: GL.Enum
+    abstract RGBA_INTEGER: GL.Enum
+    abstract RGB_INTEGER: GL.Enum
+    abstract RG_INTEGER: GL.Enum
+    abstract SAMPLER_2D_ARRAY: GL.Enum
+    abstract SAMPLER_2D_ARRAY_SHADOW: GL.Enum
+    abstract SAMPLER_2D_SHADOW: GL.Enum
+    abstract SAMPLER_3D: GL.Enum
+    abstract SAMPLER_BINDING: GL.Enum
+    abstract SAMPLER_CUBE_SHADOW: GL.Enum
+    abstract SEPARATE_ATTRIBS: GL.Enum
+    abstract SIGNALED: GL.Enum
+    abstract SIGNED_NORMALIZED: GL.Enum
+    abstract SRGB: GL.Enum
+    abstract SRGB8: GL.Enum
+    abstract SRGB8_ALPHA8: GL.Enum
+    abstract STATIC_COPY: GL.Enum
+    abstract STATIC_READ: GL.Enum
+    abstract STENCIL: GL.Enum
+    abstract STREAM_COPY: GL.Enum
+    abstract STREAM_READ: GL.Enum
+    abstract SYNC_CONDITION: GL.Enum
+    abstract SYNC_FENCE: GL.Enum
+    abstract SYNC_FLAGS: GL.Enum
+    abstract SYNC_FLUSH_COMMANDS_BIT: GL.Enum
+    abstract SYNC_GPU_COMMANDS_COMPLETE: GL.Enum
+    abstract SYNC_STATUS: GL.Enum
+    abstract TEXTURE_2D_ARRAY: GL.Enum
+    abstract TEXTURE_3D: GL.Enum
+    abstract TEXTURE_BASE_LEVEL: GL.Enum
+    abstract TEXTURE_BINDING_2D_ARRAY: GL.Enum
+    abstract TEXTURE_BINDING_3D: GL.Enum
+    abstract TEXTURE_COMPARE_FUNC: GL.Enum
+    abstract TEXTURE_COMPARE_MODE: GL.Enum
+    abstract TEXTURE_IMMUTABLE_FORMAT: GL.Enum
+    abstract TEXTURE_IMMUTABLE_LEVELS: GL.Enum
+    abstract TEXTURE_MAX_LEVEL: GL.Enum
+    abstract TEXTURE_MAX_LOD: GL.Enum
+    abstract TEXTURE_MIN_LOD: GL.Enum
+    abstract TEXTURE_WRAP_R: GL.Enum
+    abstract TIMEOUT_EXPIRED: GL.Enum
+    abstract TIMEOUT_IGNORED: GL.Int64
+    abstract TRANSFORM_FEEDBACK: GL.Enum
+    abstract TRANSFORM_FEEDBACK_ACTIVE: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BINDING: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BUFFER: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BUFFER_BINDING: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BUFFER_MODE: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BUFFER_SIZE: GL.Enum
+    abstract TRANSFORM_FEEDBACK_BUFFER_START: GL.Enum
+    abstract TRANSFORM_FEEDBACK_PAUSED: GL.Enum
+    abstract TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN: GL.Enum
+    abstract TRANSFORM_FEEDBACK_VARYINGS: GL.Enum
+    abstract UNIFORM_ARRAY_STRIDE: GL.Enum
+    abstract UNIFORM_BLOCK_ACTIVE_UNIFORMS: GL.Enum
+    abstract UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES: GL.Enum
+    abstract UNIFORM_BLOCK_BINDING: GL.Enum
+    abstract UNIFORM_BLOCK_DATA_SIZE: GL.Enum
+    abstract UNIFORM_BLOCK_INDEX: GL.Enum
+    abstract UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER: GL.Enum
+    abstract UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER: GL.Enum
+    abstract UNIFORM_BUFFER: GL.Enum
+    abstract UNIFORM_BUFFER_BINDING: GL.Enum
+    abstract UNIFORM_BUFFER_OFFSET_ALIGNMENT: GL.Enum
+    abstract UNIFORM_BUFFER_SIZE: GL.Enum
+    abstract UNIFORM_BUFFER_START: GL.Enum
+    abstract UNIFORM_IS_ROW_MAJOR: GL.Enum
+    abstract UNIFORM_MATRIX_STRIDE: GL.Enum
+    abstract UNIFORM_OFFSET: GL.Enum
+    abstract UNIFORM_SIZE: GL.Enum
+    abstract UNIFORM_TYPE: GL.Enum
+    abstract UNPACK_IMAGE_HEIGHT: GL.Enum
+    abstract UNPACK_ROW_LENGTH: GL.Enum
+    abstract UNPACK_SKIP_IMAGES: GL.Enum
+    abstract UNPACK_SKIP_PIXELS: GL.Enum
+    abstract UNPACK_SKIP_ROWS: GL.Enum
+    abstract UNSIGNALED: GL.Enum
+    abstract UNSIGNED_INT_10F_11F_11F_REV: GL.Enum
+    abstract UNSIGNED_INT_24_8: GL.Enum
+    abstract UNSIGNED_INT_2_10_10_10_REV: GL.Enum
+    abstract UNSIGNED_INT_5_9_9_9_REV: GL.Enum
+    abstract UNSIGNED_INT_SAMPLER_2D: GL.Enum
+    abstract UNSIGNED_INT_SAMPLER_2D_ARRAY: GL.Enum
+    abstract UNSIGNED_INT_SAMPLER_3D: GL.Enum
+    abstract UNSIGNED_INT_SAMPLER_CUBE: GL.Enum
+    abstract UNSIGNED_INT_VEC2: GL.Enum
+    abstract UNSIGNED_INT_VEC3: GL.Enum
+    abstract UNSIGNED_INT_VEC4: GL.Enum
+    abstract UNSIGNED_NORMALIZED: GL.Enum
+    abstract VERTEX_ARRAY_BINDING: GL.Enum
+    abstract VERTEX_ATTRIB_ARRAY_DIVISOR: GL.Enum
+    abstract VERTEX_ATTRIB_ARRAY_INTEGER: GL.Enum
+    abstract WAIT_FAILED: GL.Enum

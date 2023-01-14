@@ -1,17 +1,20 @@
 namespace Core.Systems
 
+open Systems.Renderer
+open Platforms.WebGL
+
 type SystemManager () =
     member private _.LoggerSystem = LoggerSystem()
     // member private _.RendererSystem = RendererSystem()
 
-    member private _.WindowSystem = Systems.Implementations.HTMLCanvasWindow()
-    member private My.RendererSystem = Systems.Implementations.WebGL2Renderer(My.WindowSystem)
+    member private _.WindowSystem = Window()
+    member private My.RendererSystem = Renderer (My.WindowSystem)
 
     static member private Instance = lazy SystemManager()
 
     static member Logger :ILoggerSystem = SystemManager.Instance.Value.LoggerSystem
-    static member Window :Systems.IWindow = SystemManager.Instance.Value.WindowSystem
-    static member Renderer :Systems.IRenderer = SystemManager.Instance.Value.RendererSystem
+    static member Window :IWindow = SystemManager.Instance.Value.WindowSystem
+    static member Renderer :IRenderer = SystemManager.Instance.Value.RendererSystem
     // static member Renderer :IRendererSystem = SystemManager.Instance.Value.RendererSystem
 
 // [<AutoOpen>]

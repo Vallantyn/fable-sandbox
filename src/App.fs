@@ -156,7 +156,8 @@ module App
 //     |> ignore
 
 open Core.Systems
-open Systems
+open Microsoft.FSharp.Core
+open Systems.Renderer
 
 SystemManager.Logger.Log "Hello Warudo!"
 SystemManager.Logger.Debug "Hello Warudo!"
@@ -168,108 +169,86 @@ SystemManager.Logger.Error "Hello Warudo!"
 // |> Loop 0.
 
 // WEGBL2 SANDBOX
-
-open Browser.Dom
-// open Browser.WebGL
-// open Browser.Types
 open Fable.Core.JS
 open Fable.Core.JsInterop
-open Fable.Core.JS
 
-open WebGL
-open WebGL2
-open Fable.Core
+open WebGL2.RenderingContext
 
 let window = SystemManager.Window
+
+window.Width <- int Browser.Dom.window.innerWidth
+window.Height <- int Browser.Dom.window.innerHeight
+
 let gl = SystemManager.Renderer
-let GL = gl.As<RenderingContext.WebGL2RenderingContext>()
+let GL = gl.As<RenderingContext>()
 
-let createShader etype source =
-    gl.CreateShader etype
-    |> Shader.SetSource source
-    |> Shader.Compile
-
-    //     let result = gl.getShaderParameter (shader, gl.COMPILE_STATUS);
-    //
-    //     match gl.getShaderParameter (shader, gl.COMPILE_STATUS) with
-    //     | U2.Case2 status when status = true ->
-    //         Some shader
-    //     | _ ->
-    //         console.log (gl.getShaderInfoLog shader)
-    //         gl.deleteShader (Some shader)
-    //         None
-    // | _ -> None
+let checkShader (shader:IShader) =
+    match shader.GetParameter GL.COMPILE_STATUS with
+    | Choice2Of2 result when result -> ()
+    | _ ->
+        console.log (shader.GetInfoLog())
+        gl.DeleteShader shader
 
 let createProgram vertexShader fragmentShader =
     gl.CreateProgram ()
     |> Program.AttachShader vertexShader
     |> Program.AttachShader fragmentShader
     |> Program.Link
-    // |> Program.GetParameter GL.LINK_STATUS
-    // |> Option.map (fun p ->
-    //
-    // )
 
-    //     match gl.getProgramParameter (program, gl.LINK_STATUS) with
-    //     | None ->
-    //         console.log (gl.getProgramInfoLog program)
-    //         gl.deleteProgram (Some program)
-    //         None
-    //     | _ -> Some program
-    // | _ -> None
+let checkProgram (program:IProgram) =
+    if program.GetParameter GL.LINK_STATUS |> Option.isNone
+    then
+        console.log (program.GetInfoLog())
+        gl.DeleteProgram program
 
-let vertexShaderSource = importDefault "${outDir}/../shaders/shader.vert"
-let fragmentShaderSource = importDefault "${outDir}/../shaders/shader.frag"
+let vertexShader = gl |> CreateVertexShader (importDefault "${outDir}/../shaders/shader.vert")
+    // |> createShader EShaderType.Vertex
 
-let vertexShader = createShader GL.VERTEX_SHADER vertexShaderSource
-let fragmentShader = createShader GL.FRAGMENT_SHADER fragmentShaderSource
+checkShader vertexShader
+
+let fragmentShader = gl |> CreateFragmentShader (importDefault "${outDir}/../shaders/shader.frag")
+    // |> createShader EShaderType.Fragment
+
+checkShader fragmentShader
 
 let program = createProgram vertexShader fragmentShader
 
-let positionAttributeLocation = program.GetAttributeLocation "a_position"
+checkProgram program
+
 let resolutionUniformLocation = program.GetUniformLocation "u_resolution"
 
-let positionBuffer = gl.CreateBuffer()
-positionBuffer.Bind GL.ARRAY_BUFFER
+let positionBuffer =
+    gl.CreateBuffer()
+    |> Buffer.Bind GL.ARRAY_BUFFER
 
 let positions = [|
-    10; 20;
-    80; 20;
-    10; 30;
-    10; 30;
-    80; 20;
-    80; 30;
+    10f; 20f;
+    80f; 20f;
+    10f; 30f;
+    10f; 30f;
+    80f; 20f;
+    80f; 30f;
 |]
 
-let ff = Constructors.Float32Array.Create(positions)
-gl.BufferData (gl.ARRAY_BUFFER, (Some (!^ ff.buffer)), gl.STATIC_DRAW)
+gl.BufferData (GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW)
 
-let vao = gl.CreateVertexArray ()
-vao.Bind ()
+let vao =
+     gl.CreateVertexArray ()
+     |> VertexArray.Bind
 
-positionAttributeLocation.EnableVertexArray ()
+let positionAttributeLocation =
+    program.GetAttributeLocation "a_position"
+    |> AttributeLocation.Enable
+    |> AttributeLocation.Pointer 2 GL.FLOAT false 0 0
 
-let size = 2
-let t = GL.FLOAT
-let normalize = false
-let stride = 0
-let offset = 0
-
-positionAttributeLocation.VertexPointer (size, t, normalize, stride, offset)
-
-GL.viewport (0, 0, window.Width, window.Height)
-GL.clearColor (0f, 0f, 0f, 0f)
-// gl.clear gl.COLOR_BUFFER_BIT
-GL.clear GL.COLOR_BUFFER_BIT
+gl.Viewport (0, 0, window.Width, window.Height)
+gl.ClearWithColor (0.5, 0.5, 0.5)
 
 program.Use ()
-resolutionUniformLocation.SetFloat (single window.Width, single window.Height)
+resolutionUniformLocation.SetFloat (window.Width, window.Height)
 
 vao.Bind ()
 
-let primitiveType = GL.TRIANGLES;
-// let offset = 0.0;
+let primitiveType = ERenderingPrimitive.Triangles //GL.TRIANGLES;
 let count = 6;
-GL.drawArrays (primitiveType, offset, count)
-
-()
+gl.DrawArrays (ERenderingPrimitive.Triangles, 0, 6)

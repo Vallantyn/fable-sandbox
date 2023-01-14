@@ -1,21 +1,15 @@
-namespace Systems.Renderer.WebGL
+﻿namespace Platforms.WebGL
 
-open System
 open Fable.Core
-open Fable.Core.JsInterop
-
-open Microsoft.FSharp.Core
-open Systems
 open Systems.Renderer
+
+open WebGL.Types
+open WebGL2.RenderingContext
 
 open HTML.Types
 
-open WebGL
-open WebGL.Types
-open WebGL2.RenderingContext
-open HTML.Canvas
-
-type WebGL2Renderer (window:IWindow) =
+[<Mangle>]
+type Renderer (window:IWindow) =
     let _window = window
     let GL = _window.As<HTMLCanvasElement>().getContext_webgl2()
 

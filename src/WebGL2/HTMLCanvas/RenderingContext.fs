@@ -5,11 +5,9 @@ open Fable.Core
 
 open Canvas2D
 open ImageBitmap
-open WebGL.RenderingContext
-open WebGL2.RenderingContext
 
 type RenderingContext =
-    U4<CanvasRenderingContext2D, ImageBitmapRenderingContext, WebGLRenderingContext, WebGL2RenderingContext>
+    U4<CanvasRenderingContext2D, ImageBitmapRenderingContext, WebGL.RenderingContext.RenderingContext, WebGL2.RenderingContext.RenderingContext>
 
 type [<StringEnum; RequireQualifiedAccess>] RenderingContextType =
 | [<CompiledName("2d")>] Canvas2D
@@ -34,4 +32,4 @@ module RenderingContext =
         /// <param name="contextId">The identifier (ID) of the type of canvas to create.<br/>Internet Explorer 9 and Internet Explorer 10 support only a 2-D context using `canvas.getContext("2d");`<br/>IE11 Preview also supports 3-D or WebGL context using `canvas.getContext("experimental-webgl");`</param>
         /// <param name="options">Options to pass to the context.</param>
         /// <returns>`Some RenderingContext` if successful, `None` otherwise.</returns>
-        member __.getContext(contextId: RenderingContextType, ?options: obj): RenderingContext option = jsNative
+        member _.getContext(contextId: RenderingContextType, ?options: obj): RenderingContext option = jsNative
