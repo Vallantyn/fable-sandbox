@@ -23,25 +23,7 @@ type Renderer (window:IWindow) =
         member _.ClearColor (r, g, b, a) = GL.clearColor (r, g, b, a)
         member _.Clear bits = GL.clear (uint bits)
 
-        member _.DrawArrays (t, o, c) = GL.drawArrays (uint t, o, c)
-
-        member My.CreateShader ``type`` = Shader (My, ``type``)
-        member _.DeleteShader shader =
-            shader
-            |> TryAs<WebGLShader>
-            |> GL.deleteShader
-
-        member My.CreateProgram () = Program My
-        member _.DeleteProgram program =
-            program
-            |> TryAs<WebGLProgram>
-            |> GL.deleteProgram
-
-        member My.CreateBuffer () = Buffer My
-        member _.DeleteBuffer buffer =
-            buffer
-            |> TryAs<WebGLBuffer>
-            |> GL.deleteBuffer
+        member _.DrawArrays (primitiveType, offset, count) = GL.drawArrays (uint primitiveType, offset, count)
 
         member this.BufferData (target, data:int array, usage) =
             GL.bufferData (target, data, usage)
@@ -55,23 +37,22 @@ type Renderer (window:IWindow) =
         member this.BufferData (target, data:float array, usage) =
             GL.bufferData (target, data, usage)
 
+        member My.CreateShader shaderType = Shader (My, shaderType)
+
+        member My.CreateProgram () = Program My
+
+        member My.CreateBuffer () = Buffer My
+        
         member this.CreateFrameBuffer() = failwith "todo"
-        member this.DeleteFrameBuffer(var0) = failwith "todo"
 
         member this.CreateQuery() = failwith "todo"
-        member this.DeleteQuery(var0) = failwith "todo"
 
         member this.CreateRenderBuffer() = failwith "todo"
-        member this.DeleteRenderBuffer(var0) = failwith "todo"
 
         member this.CreateSampler() = failwith "todo"
-        member this.DeleteSampler(var0) = failwith "todo"
 
         member this.CreateTexture() = failwith "todo"
-        member this.DeleteTexture(var0) = failwith "todo"
 
         member this.CreateTransformFeedback() = failwith "todo"
-        member this.DeleteTransformFeedback(var0) = failwith "todo"
 
         member My.CreateVertexArray() = VertexArray My
-        member this.DeleteVertexArray(var0) = failwith "todo"

@@ -77,10 +77,6 @@ type EBlendingEquation =
 type EGLParameter =
 | TODO = 0u
 
-type EShaderParameter =
-| Delete    = 0x8B80u
-| Compile   = 0x8B81u
-
 type EParameter =
 // WebGL 1
 | ActiveTexture
@@ -182,50 +178,31 @@ type IRenderer =
     inherit IWrapper
 
     /// Clear the Screen
-    abstract member Viewport: int * int * int * int -> unit
+    abstract Viewport: x:int * y:int * width:int * height:int -> unit
 
-    abstract member ClearColor: float * float * float * float -> unit
-    abstract member ClearDepth: float -> unit
-    abstract member ClearStencil: int -> unit
-    abstract member Clear: EBufferBit -> unit
+    abstract ClearColor:    r:float * g:float * b:float * a:float -> unit
+    abstract ClearDepth:    depth:float -> unit
+    abstract ClearStencil:  stencil:int -> unit
+    abstract Clear:         bufferBits:EBufferBit -> unit
 
-    abstract member DrawArrays: ERenderingPrimitive * int * int -> unit
+    abstract DrawArrays: primitiveType:ERenderingPrimitive * offset:int * count:int -> unit
+
+    abstract BufferData: target:EBufferTarget * sourceData:int array    * usage:EBufferUsage -> unit
+    abstract BufferData: target:EBufferTarget * sourceData:uint array   * usage:EBufferUsage -> unit
+    abstract BufferData: target:EBufferTarget * sourceData:single array * usage:EBufferUsage -> unit
+    abstract BufferData: target:EBufferTarget * sourceData:float array  * usage:EBufferUsage -> unit
 
     /// Creates a new Shader
-    abstract member CreateShader: EShaderType -> IShader
-    abstract member DeleteShader: IShader -> unit
-
-    abstract member CreateProgram: unit -> IProgram
-    abstract member DeleteProgram: IProgram -> unit
-
-    abstract member CreateBuffer: unit -> IBuffer
-    abstract member DeleteBuffer: IBuffer -> unit
-
-    abstract member BufferData: uint * int array * uint -> unit
-    abstract member BufferData: uint * uint array * uint -> unit
-    abstract member BufferData: uint * single array * uint -> unit
-    abstract member BufferData: uint * float array * uint -> unit
-
-    abstract member CreateFrameBuffer: unit -> IFrameBuffer
-    abstract member DeleteFrameBuffer: IFrameBuffer -> unit
-
-    abstract member CreateRenderBuffer: unit -> IRenderBuffer
-    abstract member DeleteRenderBuffer: IRenderBuffer -> unit
-
-    abstract member CreateTexture: unit -> ITexture
-    abstract member DeleteTexture: ITexture -> unit
-
-    abstract member CreateSampler: unit -> ISampler
-    abstract member DeleteSampler: ISampler -> unit
-
-    abstract member CreateVertexArray: unit -> IVertexArray
-    abstract member DeleteVertexArray: IVertexArray -> unit
-
-    abstract member CreateQuery: unit -> IQuery
-    abstract member DeleteQuery: IQuery -> unit
-
-    abstract member CreateTransformFeedback: unit -> ITransformFeedback
-    abstract member DeleteTransformFeedback: ITransformFeedback -> unit
+    abstract CreateShader:              shaderType:EShaderType -> IShader
+    abstract CreateProgram:             unit -> IProgram
+    abstract CreateBuffer:              unit -> IBuffer
+    abstract CreateFrameBuffer:         unit -> IFrameBuffer
+    abstract CreateRenderBuffer:        unit -> IRenderBuffer
+    abstract CreateTexture:             unit -> ITexture
+    abstract CreateSampler:             unit -> ISampler
+    abstract CreateVertexArray:         unit -> IVertexArray
+    abstract CreateQuery:               unit -> IQuery
+    abstract CreateTransformFeedback:   unit -> ITransformFeedback
 
 [<AutoOpen>]
 module Renderer =
@@ -234,22 +211,53 @@ module Renderer =
             let a = defaultArg a 0.
             My.ClearColor (r, g, b, a)
             My.Clear EBufferBit.Color
+        member inline _.Delete<'T when 'T: (member Delete: unit -> unit)> (object:'T)   = object.Delete()
 
-        // member My.ClearColor (c:System.Drawing.Color) =
-        //     let r = float (c.R / 0xFFuy)
-        //     let g = float (c.G / 0xFFuy)
-        //     let b = float (c.B / 0xFFuy)
-        //     let a = float (c.A / 0xFFuy)
-        //     My.ClearColor (r, g, b, a)
-        //
-        // member My.ClearWithColor (c:System.Drawing.Color) =
-        //     My.ClearColor c
-        //     My.Clear EBufferBit.Color
+    let inline CreateShader shaderType (renderer:IRenderer) = renderer.CreateShader shaderType
+    let inline CreateProgram (renderer:IRenderer) = renderer.CreateProgram ()
+    let inline CreateBuffer (renderer:IRenderer) = renderer.CreateBuffer () 
+    let inline CreateFrameBuffer (renderer:IRenderer) = renderer.CreateFrameBuffer ()
+    let inline CreateRenderBuffer (renderer:IRenderer) = renderer.CreateRenderBuffer ()
+    let inline CreateTexture (renderer:IRenderer) = renderer.CreateTexture () 
+    let inline CreateSampler (renderer:IRenderer) = renderer.CreateSampler () 
+    let inline CreateVertexArray (renderer:IRenderer) = renderer.CreateVertexArray ()
+    let inline CreateQuery (renderer:IRenderer) = renderer.CreateQuery () 
+    let inline CreateTransformFeedback (renderer:IRenderer) = renderer.CreateTransformFeedback ()
 
-    let CreateShader etype source (r:IRenderer) =
-        r.CreateShader etype
-        |> SetSource source
-        |> Compile
+    let inline Delete object (r:IRenderer) = r.Delete object
 
-    let CreateVertexShader source (r:IRenderer) = r |> CreateShader EShaderType.Vertex source
-    let CreateFragmentShader source (r:IRenderer) = r |> CreateShader EShaderType.Fragment source
+    let inline Viewport x y w h (renderer:IRenderer) = renderer.Viewport (x, y, w, h); renderer
+    let inline Clear bufferBits (renderer:IRenderer) = renderer.Clear bufferBits; renderer
+    let inline ClearWithColor r g b a (renderer:IRenderer) = renderer.ClearWithColor (r, g, b, a); renderer
+    let inline DrawArrays primitiveType offset count (renderer:IRenderer) = renderer.DrawArrays (primitiveType, offset, count); renderer
+
+    let CreateShaderWithSource shaderType shaderSource renderer =
+        renderer
+        |> CreateShader shaderType
+        |> SetShaderSource shaderSource
+        |> CompileShader
+
+    let CreateProgramWithShaders vertexShader fragmentShader renderer =
+        renderer
+        |> CreateProgram
+        |> AttachShader vertexShader
+        |> AttachShader fragmentShader
+        |> LinkProgram
+
+    let CreateVertexShaderWithSource vertexShaderSource renderer =
+        renderer
+        |> CreateShaderWithSource
+            EShaderType.Vertex
+            vertexShaderSource
+
+    let CreateFragmentShaderWithSource fragmentShaderSource renderer =
+        renderer
+        |> CreateShaderWithSource
+            EShaderType.Fragment
+            fragmentShaderSource
+
+    let CreateProgramWithSources vertexShaderSource fragmentShaderSource renderer =
+        renderer
+        |> CreateProgramWithShaders
+            (renderer |> CreateVertexShaderWithSource vertexShaderSource)
+            (renderer |> CreateFragmentShaderWithSource fragmentShaderSource)

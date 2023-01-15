@@ -182,44 +182,19 @@ window.Height <- int Browser.Dom.window.innerHeight
 let gl = SystemManager.Renderer
 let GL = gl.As<RenderingContext>()
 
-let checkShader (shader:IShader) =
-    match shader.GetParameter GL.COMPILE_STATUS with
-    | Choice2Of2 result when result -> ()
-    | _ ->
-        console.log (shader.GetInfoLog())
-        gl.DeleteShader shader
-
-let createProgram vertexShader fragmentShader =
-    gl.CreateProgram ()
-    |> Program.AttachShader vertexShader
-    |> Program.AttachShader fragmentShader
-    |> Program.Link
-
-let checkProgram (program:IProgram) =
-    if program.GetParameter GL.LINK_STATUS |> Option.isNone
-    then
-        console.log (program.GetInfoLog())
-        gl.DeleteProgram program
-
-let vertexShader = gl |> CreateVertexShader (importDefault "${outDir}/../shaders/shader.vert")
-    // |> createShader EShaderType.Vertex
-
-checkShader vertexShader
-
-let fragmentShader = gl |> CreateFragmentShader (importDefault "${outDir}/../shaders/shader.frag")
-    // |> createShader EShaderType.Fragment
-
-checkShader fragmentShader
-
-let program = createProgram vertexShader fragmentShader
-
-checkProgram program
+let program =
+    gl
+    |> CreateProgramWithSources
+        (importDefault "${outDir}/../shaders/shader.vert")
+        (importDefault "${outDir}/../shaders/shader.frag")
+    |> CheckProgram
 
 let resolutionUniformLocation = program.GetUniformLocation "u_resolution"
 
 let positionBuffer =
-    gl.CreateBuffer()
-    |> Buffer.Bind GL.ARRAY_BUFFER
+    gl
+    |> CreateBuffer
+    |> BindBuffer EBufferTarget.Array
 
 let positions = [|
     10f; 20f;
@@ -230,25 +205,28 @@ let positions = [|
     80f; 30f;
 |]
 
-gl.BufferData (GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW)
+positionBuffer.Data (EBufferTarget.Array, SingleBuffer positions, EBufferUsage.StaticDraw)
 
 let vao =
-     gl.CreateVertexArray ()
-     |> VertexArray.Bind
+     gl
+     |> CreateVertexArray
+     |> BindVertexArray
 
 let positionAttributeLocation =
     program.GetAttributeLocation "a_position"
-    |> AttributeLocation.Enable
-    |> AttributeLocation.Pointer 2 GL.FLOAT false 0 0
+    |> EnableAttributeLocation
+    |> VertexAttributePointer 2 GL.FLOAT false 0 0
 
-gl.Viewport (0, 0, window.Width, window.Height)
-gl.ClearWithColor (0.5, 0.5, 0.5)
+gl
+|> Viewport 0 0 window.Width window.Height
+|> ClearWithColor 0.5 0.5 0.5 1.0
+|> ignore
 
 program.Use ()
-resolutionUniformLocation.SetFloat (window.Width, window.Height)
+resolutionUniformLocation.Float2 <- (window.Width, window.Height)
 
 vao.Bind ()
 
-let primitiveType = ERenderingPrimitive.Triangles //GL.TRIANGLES;
-let count = 6;
-gl.DrawArrays (ERenderingPrimitive.Triangles, 0, 6)
+gl
+|> DrawArrays ERenderingPrimitive.Triangles 0 6
+|> ignore

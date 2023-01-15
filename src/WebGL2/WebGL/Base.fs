@@ -105,7 +105,7 @@ type Base =
     abstract getFramebufferAttachmentParameter: target: GL.Enum * attachment: GL.Enum * pname: GL.Enum -> obj option
     abstract getParameter: pname: GL.Enum -> obj option
     abstract getProgramInfoLog: program: WebGLProgram -> string option
-    abstract getProgramParameter: program: WebGLProgram * pname: GL.Enum -> obj option
+    abstract getProgramParameter: program: WebGLProgram * pname: GL.Enum -> U3<GL.Boolean, GL.Int, GL.Enum>
     abstract getRenderbufferParameter: target: GL.Enum * pname: GL.Enum -> obj option
     abstract getShaderInfoLog: shader: WebGLShader -> string option
     abstract getShaderParameter: shader: WebGLShader * pname: GL.Enum -> U2<GL.Enum, GL.Boolean>

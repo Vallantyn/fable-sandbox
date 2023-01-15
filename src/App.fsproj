@@ -21,7 +21,6 @@
     <Compile Include="Core\Systems\Interface\ILoggerSystem.fs" />
     <Compile Include="Core\Systems\Implementation\LoggerSystem.fs" />
     <!-- Systems / Abstract -->
-    <Folder Include="Systems\Abstract" />
     <Compile Include="Systems\Renderer\Common.fs" />
     <Compile Include="Systems\Renderer\IWindow.fs" />
     <Compile Include="Systems\Renderer\IShader.fs" />
@@ -54,6 +53,9 @@
     <Compile Include="Terminal\Terminal.fs" />
     <Compile Include="App.fs" />
     <None Include="IoC.Sandbox.fsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Systems\Abstract\**" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
