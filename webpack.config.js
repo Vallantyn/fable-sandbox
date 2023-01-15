@@ -26,6 +26,7 @@ module.exports = {
                 type: 'asset/source',
                 use: [
                 //     'raw-loader',
+                    'glslify-import-loader',
                     'glslify-loader'
                 ]
             }
