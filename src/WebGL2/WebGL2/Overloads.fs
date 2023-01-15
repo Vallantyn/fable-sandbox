@@ -6,14 +6,17 @@ open Fable.Core.JS
 open HTML.Types
 open WebGL.Types
 
+type TypedArray =
+| Int32Array of int array
+| UInt32Array of uint array
+| Float32Array of single array
+| Float64Array of float array
+
 [<AllowNullLiteral; CompiledName("WebGL2RenderingContextOverloads")>]
 type Overloads =
     abstract bufferData: target: GL.Enum * size: GL.SizeiPtr * usage: GL.Enum -> unit
-    abstract bufferData: target: GL.Enum * srcData: int array * usage: GL.Enum -> unit
-    abstract bufferData: target: GL.Enum * srcData: uint array * usage: GL.Enum -> unit
-    abstract bufferData: target: GL.Enum * srcData: single array * usage: GL.Enum -> unit
-    abstract bufferData: target: GL.Enum * srcData: float array * usage: GL.Enum -> unit
-    abstract bufferData: target: GL.Enum * srcData: ArrayBufferView * usage: GL.Enum * srcOffset: GL.UInt * ?length: GL.UInt -> unit
+    abstract bufferData: target: GL.Enum * data:'T array * usage: GL.Enum -> unit
+    abstract bufferData: target: GL.Enum * srcData:'T array * usage: GL.Enum * srcOffset: GL.UInt * ?length: GL.UInt -> unit
     abstract bufferSubData: target: GL.Enum * dstByteOffset: GL.IntPtr * srcData: BufferSource -> unit
     abstract bufferSubData: target: GL.Enum * dstByteOffset: GL.IntPtr * srcData: ArrayBufferView * srcOffset: GL.UInt * ?length: GL.UInt -> unit
     abstract compressedTexImage2D: target: GL.Enum * level: GL.Int * internalformat: GL.Enum * width: GL.Sizei * height: GL.Sizei * border: GL.Int * imageSize: GL.Sizei * offset: GL.IntPtr -> unit

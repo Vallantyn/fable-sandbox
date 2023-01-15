@@ -187,11 +187,6 @@ type IRenderer =
 
     abstract DrawArrays: primitiveType:ERenderingPrimitive * offset:int * count:int -> unit
 
-    abstract BufferData: target:EBufferTarget * sourceData:int array    * usage:EBufferUsage -> unit
-    abstract BufferData: target:EBufferTarget * sourceData:uint array   * usage:EBufferUsage -> unit
-    abstract BufferData: target:EBufferTarget * sourceData:single array * usage:EBufferUsage -> unit
-    abstract BufferData: target:EBufferTarget * sourceData:float array  * usage:EBufferUsage -> unit
-
     /// Creates a new Shader
     abstract CreateShader:              shaderType:EShaderType -> IShader
     abstract CreateProgram:             unit -> IProgram
@@ -236,6 +231,7 @@ module Renderer =
         |> CreateShader shaderType
         |> SetShaderSource shaderSource
         |> CompileShader
+        |> CheckShader
 
     let CreateProgramWithShaders vertexShader fragmentShader renderer =
         renderer

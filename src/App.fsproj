@@ -53,6 +53,7 @@
     <Compile Include="Terminal\Terminal.fs" />
     <Compile Include="App.fs" />
     <None Include="IoC.Sandbox.fsx" />
+    <TypeScriptCompile Include="test.ts" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Remove="Systems\Abstract\**" />

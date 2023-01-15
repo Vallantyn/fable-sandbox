@@ -1,5 +1,7 @@
 ﻿namespace Systems.Renderer
 
+open WebGL2.RenderingContext
+
 [<AutoOpen>]
 module Buffer =
     type EBufferParameter =
@@ -27,11 +29,13 @@ module Buffer =
     | DynamicCopy   = 0x88EAu
     | StreamCopy    = 0x88E2u
 
-    type TBufferSourceData = // Choice<int array, uint array, single array, float array>
-    | IntBuffer     of int array
-    | UIntBuffer    of uint array
-    | SingleBuffer  of single array
-    | FloatBuffer   of float array
+    type TArray<'T> = 'T array
+
+    type TBufferData = // Choice<int array, uint array, single array, float array>
+    | IntBuffer     of TArray<int>
+    | UIntBuffer    of TArray<uint>
+    | SingleBuffer  of TArray<single>
+    | FloatBuffer   of TArray<float>
 
     type TBufferParameterValue = //Choice<int, EBufferUsage>
     | Size  of int
@@ -45,27 +49,24 @@ module Buffer =
         abstract bIsBuffer: bool with get
         abstract Bind: target:EBufferTarget -> unit
         abstract GetParameter: target:EBufferTarget * parameter:EBufferParameter -> TBufferParameterValue 
-        abstract Data: target:EBufferTarget * usage:EBufferUsage -> unit
-        abstract Data: target:EBufferTarget * usage:EBufferUsage * sourceOffset:uint -> unit
         abstract Data: target:EBufferTarget * size:int * usage:EBufferUsage -> unit
-        abstract Data: target:EBufferTarget * sourceData:TBufferSourceData * usage:EBufferUsage -> unit
-        abstract Data: target:EBufferTarget * sourceData:TBufferSourceData * usage:EBufferUsage * sourceOffset:uint -> unit
-        abstract Data: target:EBufferTarget * sourceData:TBufferSourceData * usage:EBufferUsage * sourceOffset:uint * length:uint -> unit
-        abstract SubData: target:EBufferTarget * sourceOffset:uint -> unit
-        abstract SubData: target:EBufferTarget * sourceOffset:uint * sourceData:TBufferSourceData -> unit
-        abstract SubData: target:EBufferTarget * byteOffset:uint * sourceOffset:uint -> unit
-        abstract SubData: target:EBufferTarget * byteOffset:uint * sourceData:TBufferSourceData * sourceOffset:uint -> unit
-        abstract SubData: target:EBufferTarget * byteOffset:uint * sourceData:TBufferSourceData * sourceOffset:uint * length:uint -> unit
+        abstract Data: target:EBufferTarget * data:'T array * usage:EBufferUsage -> unit
+        abstract Data: target:EBufferTarget * sourceData:'T array * usage:EBufferUsage * sourceOffset:uint * length:uint option -> unit
+        // abstract SubData: target:EBufferTarget * sourceOffset:uint -> unit
+        // abstract SubData: target:EBufferTarget * sourceOffset:uint * sourceData:TBufferSourceData -> unit
+        // abstract SubData: target:EBufferTarget * byteOffset:uint * sourceOffset:uint -> unit
+        // abstract SubData: target:EBufferTarget * byteOffset:uint * sourceData:TBufferSourceData * sourceOffset:uint -> unit
+        // abstract SubData: target:EBufferTarget * byteOffset:uint * sourceData:TBufferSourceData * sourceOffset:uint * length:uint -> unit
 
     let inline BindBuffer target (b:IBuffer) = b.Bind target; b
-    let inline BufferData (target:EBufferTarget) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, usage); b
-    let inline BufferDataWithSourceOffset (target:EBufferTarget) (usage:EBufferUsage) (sourceOffset:uint) (b:IBuffer) = b.Data (target, usage, sourceOffset); b
-    let inline BufferDataWithSize (target:EBufferTarget) (size:int) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, size, usage); b
-    let inline BufferDataWithSourceData (target:EBufferTarget) (sourceData:TBufferSourceData) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, sourceData, usage); b
-    let inline BufferDataWithSourceDataAndOffset (target:EBufferTarget) (sourceData:TBufferSourceData) (usage:EBufferUsage) (sourceOffset:uint) (b:IBuffer) = b.Data (target, sourceData, usage, sourceOffset); b
-    let inline BufferDataWithSourceDataOffsetAndLength (target:EBufferTarget) (sourceData:TBufferSourceData) (usage:EBufferUsage) (sourceOffset:uint) (length:uint) (b:IBuffer) = b.Data (target, sourceData, usage, sourceOffset, length); b
-    let inline BufferSubData (target:EBufferTarget) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, sourceOffset); b
-    let inline BufferSubDataWithSourceData (target:EBufferTarget) (sourceOffset:uint) (sourceData:TBufferSourceData) (b:IBuffer) = b.SubData (target, sourceOffset, sourceData); b
-    let inline BufferSubDataWithOffset (target:EBufferTarget) (byteOffset:uint) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceOffset); b
-    let inline BufferSubDataWithOffsetAndSourceData (target:EBufferTarget) (byteOffset:uint) (sourceData:TBufferSourceData) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceData, sourceOffset); b
-    let inline BufferSubDataWithOffsetSourceDataAndLength (target:EBufferTarget) (byteOffset:uint) (sourceData:TBufferSourceData) (sourceOffset:uint) (length:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceData, sourceOffset, length); b
+    // let inline BufferData (target:EBufferTarget) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, usage); b
+    // let inline BufferDataWithSourceOffset (target:EBufferTarget) (usage:EBufferUsage) (sourceOffset:uint) (b:IBuffer) = b.Data (target, usage, sourceOffset); b
+    // let inline BufferDataWithSize (target:EBufferTarget) (size:int) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, size, usage); b
+    // let inline BufferDataWithSourceData (target:EBufferTarget) (sourceData:TNumericArray) (usage:EBufferUsage) (b:IBuffer) = b.Data (target, sourceData, usage); b
+    // let inline BufferDataWithSourceDataAndOffset (target:EBufferTarget) (sourceData:TNumericArray) (usage:EBufferUsage) (sourceOffset:uint) (b:IBuffer) = b.Data (target, sourceData, usage, sourceOffset); b
+    // let inline BufferDataWithSourceDataOffsetAndLength (target:EBufferTarget) (sourceData:TNumericArray) (usage:EBufferUsage) (sourceOffset:uint) (length:uint) (b:IBuffer) = b.Data (target, sourceData, usage, sourceOffset, length); b
+    // let inline BufferSubData (target:EBufferTarget) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, sourceOffset); b
+    // let inline BufferSubDataWithSourceData (target:EBufferTarget) (sourceOffset:uint) (sourceData:TNumericArray) (b:IBuffer) = b.SubData (target, sourceOffset, sourceData); b
+    // let inline BufferSubDataWithOffset (target:EBufferTarget) (byteOffset:uint) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceOffset); b
+    // let inline BufferSubDataWithOffsetAndSourceData (target:EBufferTarget) (byteOffset:uint) (sourceData:TNumericArray) (sourceOffset:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceData, sourceOffset); b
+    // let inline BufferSubDataWithOffsetSourceDataAndLength (target:EBufferTarget) (byteOffset:uint) (sourceData:TNumericArray) (sourceOffset:uint) (length:uint) (b:IBuffer) = b.SubData (target, byteOffset, sourceData, sourceOffset, length); b

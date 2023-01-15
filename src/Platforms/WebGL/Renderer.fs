@@ -25,18 +25,6 @@ type Renderer (window:IWindow) =
 
         member _.DrawArrays (primitiveType, offset, count) = GL.drawArrays (uint primitiveType, offset, count)
 
-        member this.BufferData (target, data:int array, usage) =
-            GL.bufferData (target, data, usage)
-
-        member this.BufferData (target, data:uint array, usage) =
-            GL.bufferData (target, data, usage)
-
-        member this.BufferData (target, data:single array, usage) =
-            GL.bufferData (target, data, usage)
-
-        member this.BufferData (target, data:float array, usage) =
-            GL.bufferData (target, data, usage)
-
         member My.CreateShader shaderType = Shader (My, shaderType)
 
         member My.CreateProgram () = Program My
