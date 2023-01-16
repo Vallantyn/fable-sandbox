@@ -25,9 +25,14 @@ module.exports = {
                 exclude: /node_modules/,
                 type: 'asset/source',
                 use: [
-                //     'raw-loader',
-                    'glslify-import-loader',
-                    'glslify-loader'
+                    {
+                        loader: 'glslify-loader',
+                        options: {
+                            transform: [
+                                ['glslify-import', {}]
+                            ]
+                        }
+                    }
                 ]
             }
         ]

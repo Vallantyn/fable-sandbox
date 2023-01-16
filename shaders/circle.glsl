@@ -1,34 +1,12 @@
 #version 300 es
 
-// #pragma glslify: checker = require('glsl-checker') 
-
-// fragment shaders don't have a default precision so we need
-// to pick one. highp is a good default. It means "high precision"
 precision highp float;
 
-uniform vec2 u_resolution;
+#pragma glslify: import('./shared.glsl') 
 
 uniform vec2 u_position;
 uniform float u_radius;
 uniform vec4 u_color;
-
-// we need to declare an output for the fragment shader
-out vec4 outColor;
-
-vec2 pos2clip(vec2 p)
-{
-	return (2. * p - u_resolution) / min(u_resolution.x, u_resolution.y);
-}
-
-vec2 size2clip(vec2 s)
-{
-	return s / min(u_resolution.x, u_resolution.y);
-}
-
-float val2clip(float v)
-{
-	return v / min(u_resolution.x, u_resolution.y);
-}
 
 float sdCircle ( vec2 p, float r )
 {
